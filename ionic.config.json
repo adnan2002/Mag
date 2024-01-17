@@ -1,0 +1,7 @@
+{
+  "name": "Mag",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
