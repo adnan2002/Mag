@@ -25,3 +25,21 @@
 #container a {
   text-decoration: none;
 }
+
+.custom-toolbar {
+  --background: transparent;
+  --color: inherit;
+  --ion-color-base: transparent;
+}
+
+.box{
+  border: 1px solid black;
+  background-color: #222428;
+  height: 35px;
+  margin-bottom: 10px;
+  width: 145px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
