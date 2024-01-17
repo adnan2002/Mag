@@ -25,6 +25,11 @@
     <ion-button size="small" (click)="selectCategory(item)" [fill]="item === selectedCategory ? 'solid' : 'outline'" color="dark" *ngFor="let item of categories" style="display: inline-block;">{{item}}</ion-button>
   </ion-content>
 
+  <swiper-container #swiper  style="height: 50%;" [loop]="true" [pagination]="true" slides-per-view='1'>
+    <swiper-slide *ngFor="let image of images"><img [src]="image" style="width: 100%"></swiper-slide>
+
+  </swiper-container> 
+
 
 
 
@@ -44,6 +49,9 @@
       Sort By
     </ion-button>
   </div>
+
+
+
   
  
 </ion-footer>
