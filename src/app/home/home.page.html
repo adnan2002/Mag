@@ -27,8 +27,11 @@
 
   <swiper-container #swiper  style="height: 50%;" [loop]="true" [pagination]="true" slides-per-view='1'>
     <swiper-slide *ngFor="let image of images"><img [src]="image" style="width: 100%"></swiper-slide>
-
   </swiper-container> 
+  <br>
+  <ion-text style="font-style: italic; " color="medium">{{'{Number}'}} of items listed</ion-text>
+  <br>
+  
 
 
 
