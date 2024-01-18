@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import {Swiper} from 'swiper';
 
+import { FirebaseService } from '../firebase.service';
+
 
 
 
@@ -25,7 +27,6 @@ export class HomePage {
   }
 
 
-  
 
 
   sort(){
