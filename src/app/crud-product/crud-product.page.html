@@ -1,0 +1,122 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="reset()">Reset</ion-button>
+    </ion-buttons>
+    <ion-title>crud-product</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">crud-product</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <form [formGroup]="productAddForm" >
+    <ion-item>
+      <ion-input type="text" formControlName="title" placeholder='Enter Title' labelPlacement="floating" label="Title"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-input type="text" formControlName="description" placeholder="Enter Description" label="Description" labelPlacement="floating"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-input type="number" formControlName="old_price" placeholder="Enter Old Price" label="Old Price" labelPlacement="floating"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+     <ion-input type="number" formControlName="new_price" placeholder="Enter New Price" label="New Price" labelPlacement="floating"></ion-input>
+    </ion-item>
+  
+   
+    <ion-item>
+      <ion-input type="number" formControlName="inventory" placeholder="Enter Inventory" label="Inventory" labelPlacement="floating"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+     <ion-input type="text" formControlName="vendor" placeholder="Enter Vendor" label="Vendor" labelPlacement="floating"></ion-input>
+    </ion-item>
+
+    <div formArrayName="images">
+
+    
+
+    <ion-item  *ngFor="let image of imageControls; let i=index">
+      <ion-input type="text" [formControlName]="i" placeholder="Enter Image" label="Image" labelPlacement="floating"></ion-input>
+      <ion-button color="danger" size="small" (click)="deleteImage(i)" slot="end">Remove</ion-button>
+
+    </ion-item>
+    <ion-button size="small" (click)="addImage()">Add Image</ion-button>
+  </div>
+
+  <div formArrayName="collections">
+      
+      
+  
+      <ion-item  *ngFor="let collection of collectionControls; let i=index">
+        <ion-input type="text" [formControlName]="i" placeholder="Enter Collection" label="Collection" labelPlacement="floating"></ion-input>
+        <ion-button color="danger" (click)="deleteCollection(i)" slot="end" size="small">Remove</ion-button>
+  
+      </ion-item>
+      <ion-button size="small" (click)="addCollection()">Add Collection</ion-button>
+
+  </div>
+
+  <div formArrayName="categories">
+
+    <ion-item  *ngFor="let category of categoryControls; let i=index">
+      <ion-input type="text" [formControlName]="i" placeholder="Enter Category" label="Category" labelPlacement="floating"></ion-input>
+      <ion-button color="danger" (click)="deleteCategory(i)" slot="end" size="small">Remove</ion-button>
+
+    </ion-item>
+    <ion-button size="small" (click)="addCategory()">Add Category</ion-button>
+  </div>
+
+  <ion-item>
+    <ion-toggle formControlName="variants">Variants</ion-toggle>
+  </ion-item>
+
+  <div *ngIf="productAddForm.get('variants')!.value">
+    <ion-button (click)="addVariant()">Add Variant</ion-button>
+  <div formArrayName="variantsArray" *ngFor="let variant of variantControls; let i = index">
+    <div [formGroupName]="i">
+      <ion-item>
+        <ion-input type="text" formControlName="name" placeholder="Enter Variant Name" label="Variant Name" labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="number" formControlName="old_price" placeholder="Enter Variant Old Price" label="Variant Old Price" labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="number" formControlName="new_price" placeholder="Enter Variant New Price" label="Variant New Price" labelPlacement="floating"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="number" formControlName="inventory" placeholder="Enter Variant Inventory" label="Variant Inventory" labelPlacement="floating"></ion-input>
+      </ion-item>
+
+     
+      <ion-button (click)="deleteVariant(i)">Delete Variant</ion-button>
+
+
+    </div>
+  </div>
+</div>
+  
+
+  
+
+    
+
+    <ion-button [disabled]="!productAddForm.valid" expand="block" (click)="onSubmit()">Submit</ion-button>
+
+  </form>
+
+ 
+  
+
+
+
+</ion-content>
