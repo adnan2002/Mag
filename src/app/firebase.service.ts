@@ -34,4 +34,53 @@ export class FirebaseService implements OnInit  {
       return () => unsubscribe();
     });
   }
+
+  async getUniqueCategories(): Promise<any[]> {
+    const productCollection = collection(this.firestore, 'products');
+    const productSnapshot = await getDocs(productCollection);
+    const categoriesMap = new Map<string, string[]>();
+  
+    productSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      data['categories'].forEach((category:any) => {
+        if (categoriesMap.has(category)) {
+          categoriesMap.get(category)?.push(data['title']);
+        } else {
+          categoriesMap.set(category, [data['title']]);
+        }
+      });
+    });
+  
+    return Array.from(categoriesMap, ([name, titles]) => ({name, titles}));
+  }
+  
+  async getUniqueCollections(): Promise<any[]> {
+    const productCollection = collection(this.firestore, 'products');
+    const productSnapshot = await getDocs(productCollection);
+    const collectionsMap = new Map<string, string[]>();
+  
+    productSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      data['collections'].forEach((collection:any) => {
+        if (collectionsMap.has(collection)) {
+          collectionsMap.get(collection)?.push(data['title']);
+        } else {
+          collectionsMap.set(collection, [data['title']]);
+        }
+      });
+    });
+  
+    return Array.from(collectionsMap, ([name, titles]) => ({name}));
+  }
+
+  async isTitleUnique(title: string): Promise<boolean> {
+    const productCollection = collection(this.firestore, 'products');
+    const productQuery = query(productCollection, where('title', '==', title));
+    const productSnapshot = await getDocs(productQuery);
+  
+    // If the snapshot is empty, the title is unique
+    return productSnapshot.empty;
+  }
+  
+  
 }

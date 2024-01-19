@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { FormControl, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { FirebaseService } from '../firebase.service';
 
@@ -16,10 +16,10 @@ export class CrudProductPage implements OnInit {
     old_price: ['', Validators.required],
     new_price: ['', Validators.required],
     images: new FormArray([new FormControl('', Validators.required),]),
-    categories: new FormArray([new FormControl('', Validators.required )]),
+    categories: new FormArray([new FormControl('' )]),
     collections: new FormArray([new FormControl ('', Validators.required)]),
     status: 'active',
-    inventory: ['', Validators.required],
+    inventory: [0, Validators.required],
     vendor: ['', Validators.required],
     variants: [false],
     variantsArray: this.formbuilder.array([])
@@ -31,7 +31,8 @@ export class CrudProductPage implements OnInit {
       name: ['', Validators.required],
       old_price: ['', Validators.required],
       new_price: ['', Validators.required],
-      inventory: ['', Validators.required],
+      inventory: [0, Validators.required],
+      index: [0, Validators.required]
     });
   }
 
@@ -63,7 +64,7 @@ export class CrudProductPage implements OnInit {
   }
 
 
-  constructor(private formbuilder:FormBuilder, private firebase: FirebaseService, private loadingController: LoadingController, private toastController: ToastController) { 
+  constructor(private alertController:AlertController,private formbuilder:FormBuilder, private firebase: FirebaseService, private loadingController: LoadingController, private toastController: ToastController) { 
   }
 
 
@@ -72,51 +73,72 @@ export class CrudProductPage implements OnInit {
       message: 'Please wait...',
     });
     await loading.present();
-    if(this.productAddForm.valid && this.productAddForm.get('variants')?.value == false){
-      const data = {
-        title: this.productAddForm.get('title')?.value,
-        description: this.productAddForm.get('description')?.value,
-        old_price: this.productAddForm.get('old_price')?.value,
-        new_price: this.productAddForm.get('new_price')?.value,
-        images: this.productAddForm.get('images')?.value,
-        categories: this.productAddForm.get('categories')?.value,
-        collections: this.productAddForm.get('collections')?.value,
-        status: this.productAddForm.get('status')?.value,
-        inventory: this.productAddForm.get('inventory')?.value,
-        vendor: this.productAddForm.get('vendor')?.value,
+  
+    try {
+      const title:string | any = this.productAddForm.get('title')?.value;
+      const isTitleUnique = await this.firebase.isTitleUnique(title);
+      if (!isTitleUnique) {
+        throw new Error('The product title is already used.');
       }
-
-      await this.firebase.addDocument('products', data);
-    }else if(this.productAddForm.valid && this.productAddForm.get('variants')?.value == true){
-      const data = {
-        title: this.productAddForm.get('title')?.value,
-        description: this.productAddForm.get('description')?.value,
-        old_price: this.productAddForm.get('old_price')?.value,
-        new_price: this.productAddForm.get('new_price')?.value,
-        images: this.productAddForm.get('images')?.value,
-        categories: this.productAddForm.get('categories')?.value,
-        collections: this.productAddForm.get('collections')?.value,
-        status: this.productAddForm.get('status')?.value,
-        inventory: this.productAddForm.get('inventory')?.value,
-        vendor: this.productAddForm.get('vendor')?.value,
-        variants: this.productAddForm.get('variantsArray')?.value
+  
+      const variantsArray = this.productAddForm.get('variantsArray') as FormArray;
+      const totalVariantInventory = variantsArray.controls.reduce((sum, variant) => sum + variant.get('inventory')?.value, 0);
+      const productInventory = this.productAddForm.get('inventory')?.value;
+    
+      if (productInventory !== totalVariantInventory && this.productAddForm.get('variants')?.value == true) {
+        throw new Error('The sum of the inventory of the variants does not match the inventory of the product.');
       }
-
+  
+      let data;
+      if(this.productAddForm.valid && this.productAddForm.get('variants')?.value == false){
+        data = {
+          title: this.productAddForm.get('title')?.value,
+          description: this.productAddForm.get('description')?.value,
+          old_price: this.productAddForm.get('old_price')?.value,
+          new_price: this.productAddForm.get('new_price')?.value,
+          images: this.productAddForm.get('images')?.value,
+          categories: this.productAddForm.get('categories')?.value,
+          collections: this.productAddForm.get('collections')?.value,
+          status: this.productAddForm.get('status')?.value,
+          inventory: this.productAddForm.get('inventory')?.value,
+          vendor: this.productAddForm.get('vendor')?.value,
+        }
+      } else if(this.productAddForm.valid && this.productAddForm.get('variants')?.value == true){
+        data = {
+          title: this.productAddForm.get('title')?.value,
+          description: this.productAddForm.get('description')?.value,
+          old_price: this.productAddForm.get('old_price')?.value,
+          new_price: this.productAddForm.get('new_price')?.value,
+          images: this.productAddForm.get('images')?.value,
+          categories: this.productAddForm.get('categories')?.value,
+          collections: this.productAddForm.get('collections')?.value,
+          status: this.productAddForm.get('status')?.value,
+          inventory: this.productAddForm.get('inventory')?.value,
+          vendor: this.productAddForm.get('vendor')?.value,
+          variants: this.productAddForm.get('variantsArray')?.value
+        }
+      }
+  
       await this.firebase.addDocument('products', data);
+  
+      const toast = await this.toastController.create({
+        message: 'Your operation was successful.',
+        duration: 2000,
+        color: 'success'
+      });
+      toast.present();
+    } catch (error) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: `${error}`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    } finally {
+      await loading.dismiss();
     }
-
-    await loading.dismiss();
-
-  // Present the toast controller
-  const toast = await this.toastController.create({
-    message: 'Your operation was successful.',
-    duration: 2000,
-    color: 'success'
-  });
-  toast.present();
-
-
   }
+  
 
   addImage(){
     const control = new FormControl('', Validators.required);
@@ -135,7 +157,7 @@ export class CrudProductPage implements OnInit {
   }
 
   addCategory(){
-    const control = new FormControl('', Validators.required);
+    const control = new FormControl('');
     (<FormArray>this.productAddForm.get('categories')).push(control);
   }
   deleteCategory(index:number){

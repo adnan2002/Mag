@@ -19,11 +19,22 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- <ion-item *ngFor="let cat of collectionsArr">
+    <ion-text>{{cat.name}}</ion-text>
+    <ion-item *ngFor="let title of cat.titles">
+      <ion-text>{{title}}</ion-text>
+    </ion-item>
+  </ion-item> -->
+
 
 
   <ion-content scrollEvents="true" scrollX="true" scrollY="false" style="white-space: nowrap; height: 50px;">
-    <ion-button size="small" (click)="selectCategory(item)" [fill]="item === selectedCategory ? 'solid' : 'outline'" color="dark" *ngFor="let item of categories" style="display: inline-block;">{{item}}</ion-button>
+    <ion-button size="small" (click)="selectCollection(item.name)" [fill]="item.name === selectedCollection? 'solid' : 'outline'" [color]="item.name === 'sale' ? 'danger' : 'dark'" *ngFor="let item of collectionsArr" style="display: inline-block;">
+      {{capitalizeName(item.name)}}
+    </ion-button>
   </ion-content>
+  
+  
 
   <swiper-container #swiper  style="height: 50%;" [loop]="true" [pagination]="true" slides-per-view='1'>
     <swiper-slide *ngFor="let image of images"><img [src]="image" style="width: 100%"></swiper-slide>
