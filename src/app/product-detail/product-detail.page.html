@@ -33,12 +33,15 @@
 </div>
 
 <div *ngIf="!productObject.variants" style="display: flex; justify-content: center; align-items: center;">
-  <ion-text color="dark" style="font-size: 20px">Quantity:&ensp;</ion-text>
-  <ion-select [(ngModel)]="formQuantity" (ionChange)="updateDisabled()" color="dark" style="font-weight: bold; font-size: 20px;">
-    <ion-select-option *ngFor="let num of range(formMin, formMax)" [value]="num">{{num}}</ion-select-option>
-  </ion-select>
-  
+  <ion-text color="dark" style="font-size: 20px">Quantity: </ion-text>
+  <ion-button fill="clear" size="large" (click)="decrementQuantity()" [disabled]="formQuantity === formMin"><ion-icon size="large" name="remove-circle-outline"></ion-icon></ion-button>
+  <ion-text color="dark" style="font-size: 20px">{{formQuantity}}</ion-text>
+  <ion-button size="large" fill="clear" (click)="incrementQuantity()" [disabled]="formQuantity === formMax"><ion-icon size="large" name="add-circle-outline"></ion-icon></ion-button>
 </div>
+
+
+
+
 
 <div *ngIf="productObject.variants" style="display: flex; flex-direction: column;">
   <div style="display: flex; align-items: center; justify-content: center;">

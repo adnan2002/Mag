@@ -121,6 +121,10 @@ capitalizeName(name: string): string {
   search(){
     this.nav.navigateForward('/tabs/search');
   }
+
+  
+
+  
   
 
   constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController, private nav:NavController ) {

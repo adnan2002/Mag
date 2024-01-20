@@ -66,6 +66,11 @@ export class ProductDetailPage implements OnInit {
       this.formMax = this.formMax - this.formQuantity;
       this.formQuantity = 1;
     }
+    if(this.formMax == 0){
+    this.formQuantity = 0;
+    this.formMin = 0;
+    this.cdr.detectChanges();
+    }
   }
 
   updateDisabled() {
@@ -78,6 +83,19 @@ export class ProductDetailPage implements OnInit {
 
 
   
+  incrementQuantity() {
+    if (this.formQuantity < this.formMax) {
+      this.formQuantity++;
+    }
+    this.cdr.detectChanges();
+  }
+  
+  decrementQuantity() {
+    if (this.formQuantity > this.formMin) {
+      this.formQuantity--;
+    }
+    this.cdr.detectChanges();
+  }
   
 
 
