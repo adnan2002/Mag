@@ -11,10 +11,11 @@ import {initializeApp, provideFirebaseApp} from '@angular/fire/app'
 import {getFirestore, provideFirestore} from '@angular/fire/firestore'
 
 import firebaseConfig  from '../../firebaseconfig';
+import {IonicStorageModule} from '@ionic/storage-angular'
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot({mode: 'ios'}), AppRoutingModule, provideFirebaseApp(() => initializeApp(firebaseConfig)), provideFirestore(() => getFirestore())],
+  imports: [BrowserModule, IonicStorageModule.forRoot(),IonicModule.forRoot({mode: 'ios'}), AppRoutingModule, provideFirebaseApp(() => initializeApp(firebaseConfig)), provideFirestore(() => getFirestore())],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
