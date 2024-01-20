@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {Swiper} from 'swiper';
 
 import { FirebaseService } from '../firebase.service';
+import { ActionSheetController } from '@ionic/angular';
 
 import {pipe, filter ,map, BehaviorSubject, Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
@@ -18,6 +19,9 @@ export class HomePage implements OnInit {
   products$: Observable<any>;
   copyProducts$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   copyCount = 0;
+  sortType :string = 'Recommended'
+  currentProducts:any [] = [];
+  originalProducts:any [] = [];
 
   //temp
   collectionsArr:any = [];
@@ -70,27 +74,66 @@ capitalizeName(name: string): string {
 
 
 
-  sort(){
+  sort() {
+    let sortedProducts:any = [];
+  
+    if (this.sortType === 'Price (Low to High)') {
+      sortedProducts = [...this.currentProducts].sort((a, b) => a.new_price - b.new_price);
+    } else if (this.sortType === 'Price (High to Low)') {
+      sortedProducts = [...this.currentProducts].sort((a, b) => b.new_price - a.new_price);
+    } else if (this.sortType === 'Recommended'){
+      // If the selected sort type is 'Recommended', set copyProducts$ to the original products array
+      sortedProducts = [...this.originalProducts];
 
+    }
+  
+    this.copyProducts$.next(sortedProducts);
   }
-
-  filter(){
-    
-  }
-
   
 
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Sort by',
+      buttons: [{
+        text: 'Recommended',
+        handler: () => {
+          this.sortType = 'Recommended';
+          this.sort();
+        }
+      }, {
+        text: 'Price (Low to High)',
+        handler: () => {
+          this.sortType = 'Price (Low to High)';
+          this.sort();
+        }
+      }, {
+        text: 'Price (High to Low)',
+        handler: () => {
+          this.sortType = 'Price (High to Low)';
+          this.sort();
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+  
 
-
-  constructor(private firestore: FirebaseService) {
-
+  constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController ) {
     this.products$ = this.firestore.getProducts().pipe(shareReplay(1));
 
     this.products$.subscribe((products:any) =>{
       this.copyProducts$.next(products);
       this.copyCount = products.length;
+      if (!this.originalProducts.length) {
+        this.originalProducts = products;
+      }
     });
-  }
+
+    this.copyProducts$.subscribe((products:any) =>{
+      this.currentProducts = products;
+    });
+}
+
 
 
 

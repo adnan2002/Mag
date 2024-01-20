@@ -45,7 +45,7 @@
 
   <ion-grid class="ion-padding">
     <ion-row>
-      <ion-col size="6" *ngFor="let product of copyProducts$ | async">
+      <ion-col size="6" *ngFor="let product of copyProducts$ | async" [routerLink]="['/tabs/home/product-detail', product.id]">
         <ion-card style="height: 100%; width: 100%; margin: auto">
           <swiper-container class="product-container" slides-per-view="1"  [loop]="false" [pagination]="true">
             <swiper-slide class="product-slide" *ngFor="let image of product.images">
@@ -78,14 +78,10 @@
 </ion-content>
 
 
-<ion-footer style="display: flex; justify-content: center; align-items: center;">
+<ion-footer style="display: flex; justify-content: center; align-items: center; "  >
   <div class="box">
-    <ion-button color="light" (click)="filter()" size="small" fill="clear">
-      <ion-icon name="funnel-outline"></ion-icon>
-      Filter
-    </ion-button>
-    <ion-button style="border-left: 1px solid white" color="light" (click)="sort()" size="small" fill="clear">
-      <ion-icon name="swap-vertical-outline"></ion-icon>
+    <ion-button color="light" (click)="presentActionSheet()" size="small" fill="clear">
+      <ion-icon name="swap-vertical-outline" style="margin-right: 5px"></ion-icon>
       Sort By
     </ion-button>
   </div>
