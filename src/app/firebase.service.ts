@@ -81,6 +81,14 @@ export class FirebaseService implements OnInit  {
     // If the snapshot is empty, the title is unique
     return productSnapshot.empty;
   }
+
+  async getProductById(id: string): Promise<any> {
+    const productDoc = doc(this.firestore, 'products', id);
+    const productSnapshot = await getDoc(productDoc);
+  
+    return productSnapshot.data();
+  }
+  
   
   
 }

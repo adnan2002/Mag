@@ -2,7 +2,7 @@
   <ion-toolbar class="toolbar-background">
  
     <ion-buttons  slot="end" style="margin-right: 10px">
-      <ion-button size="default" color="dark"><ion-icon  name="search-outline" ></ion-icon></ion-button>
+      <ion-button size="default" color="dark" (click)="search()"><ion-icon  name="search-outline" ></ion-icon></ion-button>
     </ion-buttons>
 
 
@@ -36,7 +36,7 @@
   
   
 
-  <swiper-container #swiper  style="height: 50%;" [loop]="true" [pagination]="true" slides-per-view='1'>
+  <swiper-container #swiper  style="height: 50%;" [loop]="true" [autoplay]="true" [pagination]="{clickable: true, dynamicBullets: true}" slides-per-view='1'>
     <swiper-slide *ngFor="let image of images"><img [src]="image" style="width: 100%"></swiper-slide>
   </swiper-container> 
   <br>

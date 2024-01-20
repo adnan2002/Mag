@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {Swiper} from 'swiper';
 
 import { FirebaseService } from '../firebase.service';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, NavController } from '@ionic/angular';
 
 import {pipe, filter ,map, BehaviorSubject, Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
@@ -116,9 +116,14 @@ capitalizeName(name: string): string {
     });
     await actionSheet.present();
   }
+
+
+  search(){
+    this.nav.navigateForward('/tabs/search');
+  }
   
 
-  constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController ) {
+  constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController, private nav:NavController ) {
     this.products$ = this.firestore.getProducts().pipe(shareReplay(1));
 
     this.products$.subscribe((products:any) =>{
