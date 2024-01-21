@@ -186,18 +186,24 @@ export class ProductDetailPage implements OnInit {
     this.productImages = this.productObject.images;
   
     // Get stored variants for the product
-    let storedVariants = await this.storage.get(this.productId);
+    let storedProducts = await this.storage.get(this.productId);
   
     // Check if product has variants and assign the first variant if it exists
     if(this.productObject.variants){
       this.selectedVariant = this.productObject.variants[0];
-      let storedVariant = storedVariants ? storedVariants.find((v:any) => v.variant === this.selectedVariant.name) : null;
+      let storedVariant = storedProducts ? storedProducts.find((v:any) => v.variant === this.selectedVariant.name) : null;
       this.formMaxVariant = storedVariant ? this.selectedVariant.inventory - storedVariant.quantity : this.selectedVariant.inventory;
     }
   
     // Calculate formMax based on storedQuantity
-    let storedQuantity = storedVariants ? storedVariants.reduce((total:number, v:any) => total + v.quantity, 0) : 0;
-    this.formMax = this.productObject.inventory - storedQuantity;
+    let storedQuantity = storedProducts ? storedProducts : 0;
+
+
+    this.formMax = storedProducts ? (this.productObject.inventory - storedQuantity) : this.productObject.inventory;
+    this.formQuantity = this.formMax > 0 ? 1 : 0;
+    this.formMin = this.formMax > 0 ? 1 : 0;
+    this.disabled = this.formMax == 0;
+
   
     // Set formQuantityVariant, formMinVariant, and formQuantity based on formMax and formMaxVariant
     this.formQuantityVariant = this.formMaxVariant > 0 ? 1 : 0;
