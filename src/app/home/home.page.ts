@@ -130,13 +130,17 @@ capitalizeName(name: string): string {
   constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController, private nav:NavController ) {
     this.products$ = this.firestore.getProducts().pipe(shareReplay(1));
 
-    this.products$.subscribe((products:any) =>{
-      this.copyProducts$.next(products);
-      this.copyCount = products.length;
-      if (!this.originalProducts.length) {
-        this.originalProducts = products;
-      }
-    });
+    // gets the products with inventory > 0
+
+    this.products$.subscribe((products:any) => {
+    let availableProducts = products.filter((product:any) => product.inventory > 0);
+    this.copyProducts$.next(availableProducts);
+    this.copyCount = availableProducts.length;
+    if (!this.originalProducts.length) {
+      this.originalProducts = availableProducts;
+    }
+});
+
 
     this.copyProducts$.subscribe((products:any) =>{
       this.currentProducts = products;

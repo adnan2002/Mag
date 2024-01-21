@@ -34,9 +34,9 @@
 
 <div *ngIf="!productObject.variants" style="display: flex; justify-content: center; align-items: center;">
   <ion-text color="dark" style="font-size: 20px">Quantity: </ion-text>
-  <ion-button fill="clear" size="large" (click)="decrementQuantity()" [disabled]="formQuantity === formMin"><ion-icon size="large" name="remove-circle-outline"></ion-icon></ion-button>
+  <ion-button fill="clear" style="color: #ff9898;" size="large" (click)="decrementQuantity()" [disabled]="formQuantity === formMin"><ion-icon size="large" name="remove-circle-outline"></ion-icon></ion-button>
   <ion-text color="dark" style="font-size: 20px">{{formQuantity}}</ion-text>
-  <ion-button size="large" fill="clear" (click)="incrementQuantity()" [disabled]="formQuantity === formMax"><ion-icon size="large" name="add-circle-outline"></ion-icon></ion-button>
+  <ion-button size="large" style="color: #ff9898" fill="clear" (click)="incrementQuantity()" [disabled]="formQuantity === formMax"><ion-icon size="large" name="add-circle-outline"></ion-icon></ion-button>
 </div>
 
 
@@ -45,15 +45,15 @@
 
 <div *ngIf="productObject.variants" style="display: flex; flex-direction: column;">
   <div style="display: flex; align-items: center; justify-content: center;">
-  <ion-text color="dark" style="font-size: 20px">Quantity: </ion-text>
-  <ion-select [(ngModel)]="formQuantity" (ionChange)="updateDisabled()" color="dark" style="font-weight: bold; font-size: 20px;">
-    <ion-select-option *ngFor="let num of range(formMin, formMax)" [value]="num">{{num}}</ion-select-option>
-  </ion-select>
+    <ion-text color="dark" style="font-size: 20px">Quantity: </ion-text>
+    <ion-button fill="clear" style="color: #ff9898;" size="large" (click)="decrementQuantityVariant()" [disabled]="formQuantityVariant === formMinVariant"><ion-icon size="large" name="remove-circle-outline"></ion-icon></ion-button>
+    <ion-text color="dark" style="font-size: 20px">{{formQuantityVariant}}</ion-text>
+    <ion-button size="large" style="color: #ff9898" fill="clear" (click)="incrementQuantityVariant()" [disabled]="formQuantityVariant === formMaxVariant"><ion-icon size="large" name="add-circle-outline"></ion-icon></ion-button>
 </div>
   <div style="display: flex; align-items: center; justify-content: center;">
   <ion-text color="dark" style="font-size: 20px">Select: </ion-text>
   <div style="overflow-x: auto; white-space: nowrap; ">
-    <ion-button style="display: inline-block" size="small" color="dark" fill="outline"  *ngFor="let item of productObject.variants">{{item.name}}</ion-button>
+    <ion-button style="display: inline-block" size="small" (click)="selectVariant(i)" color="dark" [fill]="selectedVariant === productObject.variants[i] ? 'solid' : 'outline'"  *ngFor="let item of productObject.variants; let i=index">{{item.name}}</ion-button>
   </div>
 </div>
 </div>
@@ -66,14 +66,12 @@
 
 
 
-  <ion-button (click)="goNext(1)">go</ion-button>
-
-
 
 </ion-content>
 
 
 <ion-footer>
   <ion-button *ngIf="!productObject.variants" expand="full" color="dark" (click)="addToBagNonVariant()" [disabled]="!(formQuantity > 0) || disabled" ><span style="font-weight: bold">{{'Add to Bag'}}</span></ion-button>
+  <ion-button *ngIf="productObject.variants" expand="full" color="dark" (click)="addToBagVariant()" [disabled]="!(formQuantityVariant > 0) || disabledVariant" ><span style="font-weight: bold">{{'Add to Bag'}}</span></ion-button>
 
 </ion-footer>

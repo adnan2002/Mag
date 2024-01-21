@@ -23,14 +23,18 @@ export class ProductDetailPage implements OnInit {
   formMin = 1; // will be changed
   disabled = false;
 
+  //variants
+  formQuantityVariant = 1;
+  formMaxVariant = 10;
+  formMinVariant = 1;
+  selectedVariant:any = {};
+  disabledVariant = false;
+
   constructor(private cdr: ChangeDetectorRef,private route: ActivatedRoute, private nav:NavController, private firebase: FirebaseService, private storage:Storage) { 
     this.init();
   }
 
-  range(start: number, end: number) {
-    return Array.from({length: (end - start + 1)}, (v, k) => k + start);
-  }
-  
+ 
 
 
   goBack(){
@@ -50,6 +54,31 @@ export class ProductDetailPage implements OnInit {
     await this.storage.create();
 
   }
+
+  async addToBagVariant(){
+    let currentVariant = await this.storage.get(this.productId);
+    if(currentVariant == this.selectedVariant.inventory){
+      this.disabledVariant = true;
+      return;
+    }
+    if(currentVariant == null){
+      let variantData = {variant: this.selectedVariant.name, quantity: this.formQuantityVariant};
+      await this.storage.set(this.productId, variantData);
+      this.formMaxVariant = this.formMaxVariant - this.formQuantityVariant;
+      this.formQuantityVariant = 1;
+    }else{
+      currentVariant.quantity += this.formQuantityVariant;
+      await this.storage.set(this.productId, currentVariant);
+      this.formMaxVariant = this.formMaxVariant - this.formQuantityVariant;
+      this.formQuantityVariant = 1;
+    }
+    if(this.formMaxVariant == 0){
+      this.formQuantityVariant = 0;
+      this.formMinVariant = 0;
+      this.cdr.detectChanges();
+    }
+  }
+  
 
   async addToBagNonVariant(){
     let currentQuantity = await this.storage.get(this.productId);
@@ -78,9 +107,7 @@ export class ProductDetailPage implements OnInit {
     this.cdr.detectChanges();
   }
 
-  async addToBagVariant(){
-  }
-
+ 
 
   
   incrementQuantity() {
@@ -96,7 +123,38 @@ export class ProductDetailPage implements OnInit {
     }
     this.cdr.detectChanges();
   }
+
+
+  incrementQuantityVariant() {
+    if(this.formQuantityVariant < this.formMaxVariant){
+      this.formQuantityVariant++;
+    }
+    this.cdr.detectChanges();
+  }
+  decrementQuantityVariant() 
+  {
+    if(this.formQuantityVariant > this.formMinVariant){
+      this.formQuantityVariant--;
+    }
+    this.cdr.detectChanges();
+  }
+
+  selectVariant(index: number){
+    this.selectedVariant = this.productObject.variants[index];
+    this.formMaxVariant = this.selectedVariant.inventory;
+    if(this.formMaxVariant == 0){
+    this.formQuantityVariant = 0;
+    this.formMinVariant = 0;
+    }else{
+    this.formQuantityVariant = 1;
+    this.formMinVariant = 1;
+    }
+    this.goNext(this.selectedVariant.index);
+    this.cdr.detectChanges();
+  }
   
+
+
 
 
 
@@ -105,17 +163,32 @@ export class ProductDetailPage implements OnInit {
     this.productId = <string>this.route.snapshot.paramMap.get('id');
     this.productObject = await this.firebase.getProductById(this.productId);
     this.productImages = this.productObject.images;
+
+    if(this.productObject.variants){
+     this.selectedVariant = this.productObject.variants[0];
+    }
   
     let storedQuantity = await this.storage.get(this.productId);
     if(storedQuantity != null){
       this.formMax = this.formMax - storedQuantity;
     } else {
+      if(this.productObject.variants){
+        this.formMaxVariant = this.productObject.variants[0].inventory;
+      }
       this.formMax = this.productObject.inventory;
+    }
+
+    if(this.formMaxVariant == 0){
+      this.formQuantityVariant = 0;
+      this.formMinVariant = 0;
     }
   
     if(this.formMax == 0){
       this.formQuantity = 0;
     }
+
+
+
   }
   
 

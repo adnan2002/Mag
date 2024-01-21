@@ -45,7 +45,7 @@
 
   <ion-grid class="ion-padding">
     <ion-row>
-      <ion-col size="6" *ngFor="let product of copyProducts$ | async" [routerLink]="['/tabs/home/product-detail', product.id]" [hidden]="product.inventory <= 0">
+      <ion-col size="6" *ngFor="let product of copyProducts$ | async" [routerLink]="['/tabs/home/product-detail', product.id]" >
 
         <ion-card style="height: 100%; width: 100%; margin: auto">
           <swiper-container class="product-container" slides-per-view="1"  [loop]="false" [pagination]="true">
