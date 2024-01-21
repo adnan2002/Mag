@@ -34,9 +34,6 @@ export class ProductDetailPage implements OnInit {
     this.init();
   }
 
- 
-
-
   goBack(){
     this.nav.navigateBack('/');
   }
@@ -56,28 +53,38 @@ export class ProductDetailPage implements OnInit {
   }
 
   async addToBagVariant(){
-    let currentVariant = await this.storage.get(this.productId);
-    if(currentVariant == this.selectedVariant.inventory){
-      this.disabledVariant = true;
-      return;
+    let currentVariants = await this.storage.get(this.productId);
+    if(currentVariants == null){
+      currentVariants = [];
     }
-    if(currentVariant == null){
+  
+    let existingVariant = currentVariants.find((v:any) => v.variant === this.selectedVariant.name);
+  
+    if(existingVariant){
+      if(existingVariant.quantity + this.formQuantityVariant > this.selectedVariant.inventory){
+        this.disabledVariant = true;
+        return;
+      }
+      existingVariant.quantity += this.formQuantityVariant;
+    } else {
       let variantData = {variant: this.selectedVariant.name, quantity: this.formQuantityVariant};
-      await this.storage.set(this.productId, variantData);
-      this.formMaxVariant = this.formMaxVariant - this.formQuantityVariant;
-      this.formQuantityVariant = 1;
+      currentVariants.push(variantData);
+    }
+  
+    await this.storage.set(this.productId, currentVariants);
+    if(existingVariant){
+      this.formMaxVariant = this.selectedVariant.inventory - existingVariant.quantity;
     }else{
-      currentVariant.quantity += this.formQuantityVariant;
-      await this.storage.set(this.productId, currentVariant);
-      this.formMaxVariant = this.formMaxVariant - this.formQuantityVariant;
-      this.formQuantityVariant = 1;
+      this.formMaxVariant = this.selectedVariant.inventory - this.formQuantityVariant;
     }
-    if(this.formMaxVariant == 0){
-      this.formQuantityVariant = 0;
-      this.formMinVariant = 0;
-      this.cdr.detectChanges();
-    }
+    // this.formMaxVariant = this.selectedVariant.inventory - (existingVariant ? existingVariant.quantity : 0);
+    this.formQuantityVariant = this.formMaxVariant > 0 ? 1 : 0;
+    this.formMinVariant = this.formMaxVariant > 0 ? 1 : 0;
+  
+    this.disabledVariant = this.formMaxVariant == 0;
+    this.cdr.detectChanges();
   }
+  
   
 
   async addToBagNonVariant(){
@@ -139,57 +146,68 @@ export class ProductDetailPage implements OnInit {
     this.cdr.detectChanges();
   }
 
-  selectVariant(index: number){
+  async selectVariant(index: number){
     this.selectedVariant = this.productObject.variants[index];
+    
+    // Fetch stored variants asynchronously
+    let storedVariants = await this.storage.get(this.productId);
+    
+    // Find the stored variant that matches the selected variant
+    let storedVariant = storedVariants ? storedVariants.find((v:any) => v.variant === this.selectedVariant.name) : null;
+  
+    // Update form quantities and disabledVariant flag
     this.formMaxVariant = this.selectedVariant.inventory;
-    if(this.formMaxVariant == 0){
-    this.formQuantityVariant = 0;
-    this.formMinVariant = 0;
-    }else{
-    this.formQuantityVariant = 1;
-    this.formMinVariant = 1;
+    if(storedVariant && storedVariant.quantity === this.formMaxVariant){
+      this.formQuantityVariant = 0;
+      this.formMinVariant = 0;
+      this.formMaxVariant = 0;
+    } else {
+      this.formQuantityVariant = this.formMaxVariant > 0 ? 1 : 0;
+      this.formMinVariant = this.formMaxVariant > 0 ? 1 : 0;
+      this.formMaxVariant = this.selectedVariant.inventory - (storedVariant ? storedVariant.quantity : 0);
     }
+    this.disabledVariant = this.formMaxVariant == 0;
+  
     this.goNext(this.selectedVariant.index);
     this.cdr.detectChanges();
   }
   
-
-
-
-
-
+  
+  
 
   async ngOnInit() {
+    // Get product ID from route
     this.productId = <string>this.route.snapshot.paramMap.get('id');
+  
+    // Fetch product details from Firebase
     this.productObject = await this.firebase.getProductById(this.productId);
+  
+    // Assign product images
     this.productImages = this.productObject.images;
-
+  
+    // Get stored variants for the product
+    let storedVariants = await this.storage.get(this.productId);
+  
+    // Check if product has variants and assign the first variant if it exists
     if(this.productObject.variants){
-     this.selectedVariant = this.productObject.variants[0];
+      this.selectedVariant = this.productObject.variants[0];
+      let storedVariant = storedVariants ? storedVariants.find((v:any) => v.variant === this.selectedVariant.name) : null;
+      this.formMaxVariant = storedVariant ? this.selectedVariant.inventory - storedVariant.quantity : this.selectedVariant.inventory;
     }
   
-    let storedQuantity = await this.storage.get(this.productId);
-    if(storedQuantity != null){
-      this.formMax = this.formMax - storedQuantity;
-    } else {
-      if(this.productObject.variants){
-        this.formMaxVariant = this.productObject.variants[0].inventory;
-      }
-      this.formMax = this.productObject.inventory;
-    }
-
-    if(this.formMaxVariant == 0){
-      this.formQuantityVariant = 0;
-      this.formMinVariant = 0;
-    }
+    // Calculate formMax based on storedQuantity
+    let storedQuantity = storedVariants ? storedVariants.reduce((total:number, v:any) => total + v.quantity, 0) : 0;
+    this.formMax = this.productObject.inventory - storedQuantity;
   
-    if(this.formMax == 0){
-      this.formQuantity = 0;
-    }
-
-
-
+    // Set formQuantityVariant, formMinVariant, and formQuantity based on formMax and formMaxVariant
+    this.formQuantityVariant = this.formMaxVariant > 0 ? 1 : 0;
+    this.formMinVariant = this.formMaxVariant > 0 ? 1 : 0;
+    this.formQuantity = this.formMax > 0 ? 1 : 0;
+  
+    // Set disabledVariant flag based on formMaxVariant
+    this.disabledVariant = this.formMaxVariant == 0;
   }
+  
   
 
 
