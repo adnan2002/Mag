@@ -10,11 +10,14 @@
       <ion-label>Search</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="cart" >
+    <ion-tab-button tab="cart">
       <ion-icon [name]="selectedTab === 'cart' ? 'bag-handle' : 'bag-handle-outline'"></ion-icon>
       <ion-label>Bag</ion-label>
-    </ion-tab-button>
+      <ion-badge style="background-color: #C99B9B;" *ngIf="cartItemCount | async as count; else noCount" color="danger">{{count}}</ion-badge>
+      <ng-template #noCount></ng-template>
 
+    </ion-tab-button>
+    
     <ion-tab-button tab="profile">
       <ion-icon [name]="selectedTab === 'profile' ? 'person' : 'person-outline'"></ion-icon>
       <ion-label>Account</ion-label>

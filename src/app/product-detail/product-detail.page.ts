@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { FirebaseService } from '../firebase.service';
 import {Swiper} from 'swiper'
 import { Storage } from '@ionic/storage-angular';
+import { CartService } from '../cart.service';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class ProductDetailPage implements OnInit {
   selectedVariant:any = {};
   disabledVariant = false;
 
-  constructor(private cdr: ChangeDetectorRef,private route: ActivatedRoute, private nav:NavController, private firebase: FirebaseService, private storage:Storage) { 
+  constructor(private cdr: ChangeDetectorRef,private route: ActivatedRoute, private nav:NavController, private firebase: FirebaseService, private storage:Storage, private cartService: CartService) { 
     this.init();
   }
 
@@ -83,6 +84,7 @@ export class ProductDetailPage implements OnInit {
   
     this.disabledVariant = this.formMaxVariant == 0;
     this.cdr.detectChanges();
+    this.cartService.cartUpdate.next();
   }
   
   
@@ -107,6 +109,8 @@ export class ProductDetailPage implements OnInit {
     this.formMin = 0;
     this.cdr.detectChanges();
     }
+
+    this.cartService.cartUpdate.next();
   }
 
   updateDisabled() {
