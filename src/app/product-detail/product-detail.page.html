@@ -25,11 +25,22 @@
     <ion-text color="dark" style="font-size: 16px; font-weight: bold; ">{{productObject.title}}</ion-text>
 
     <ion-text color="medium" style="font-size: 20px;  font-style: italic">{{productObject.vendor}}</ion-text>
-  
+  <div *ngIf="!productObject.variants">
     <ion-text color="dark"  style=" font-size: 20px">BHD <span style="font-weight: bold; ">{{productObject.new_price ? productObject.new_price.toFixed(2) : ''}}</span></ion-text>
-<div *ngIf="productObject.old_price - productObject.new_price !== 0" style="display: flex; flex-direction: row; gap: 4px">
+<div *ngIf="productObject.old_price - productObject.new_price !== 0 " style="display: flex; flex-direction: row; gap: 4px">
   <span style="text-decoration: line-through; color: #92949c; font-size: 14px; ">BHD {{productObject.old_price ? productObject.old_price.toFixed(2) : ''}}</span>
   <span style="color: red; font-weight: bold; font-size:14px">{{productObject.old_price ? ((productObject.old_price - productObject.new_price) / productObject.old_price * 100).toFixed(0) + '% OFF' : ''}}</span>
+</div>
+</div>
+
+<div *ngIf="productObject.variants">
+  <ion-text color="dark"   style=" font-size: 20px">BHD <span style="font-weight: bold; ">{{selectedVariant.new_price ? selectedVariant.new_price.toFixed(2) : ''}}</span></ion-text>
+  <div *ngIf="productObject.old_price - productObject.new_price !== 0 " style="display: flex; flex-direction: row; gap: 4px">
+    <span style="text-decoration: line-through; color: #92949c; font-size: 14px; ">BHD {{selectedVariant.old_price ? selectedVariant.old_price.toFixed(2) : ''}}</span>
+    <span style="color: red; font-weight: bold; font-size:14px">{{selectedVariant.old_price ? ((selectedVariant.old_price - selectedVariant.new_price) / selectedVariant.old_price * 100).toFixed(0) + '% OFF' : ''}}</span>
+  </div>
+
+
 </div>
 
 <div *ngIf="!productObject.variants" style="display: flex; justify-content: center; align-items: center;">

@@ -182,25 +182,24 @@ export class ProductDetailPage implements OnInit {
 
 
   async openModal(){
-    const modal = await this.modalController.create({
-      component: CartmodalPage,
-      cssClass: 'cart-modal',
-      backdropDismiss: true,
-    });
-    modal.initialBreakpoint = 0.5;
+    
+  
+    try {
+        
+        
+        const modal = await this.modalController.create({
+          component: CartmodalPage,
+          cssClass: 'cart-modal',
+          backdropDismiss: true,
+        });
+        modal.initialBreakpoint = 0.5;        
+        await modal.present();
+    } catch (error) {
+        console.error("Error presenting modal: ", error);
+    } 
+}
 
-    const loading = await this.loadingController.create({
-      spinner: 'dots',
-      duration: 250
-    });
-  
-    await loading.present();
-  
-    // Wait for the loading to finish
-    await loading.onDidDismiss();
-  
-    return await modal.present();
-  }
+
   
   
   

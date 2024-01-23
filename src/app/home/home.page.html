@@ -28,7 +28,7 @@
 
 
 
-  <ion-content scrollEvents="true" scrollX="true" scrollY="false" style="white-space: nowrap; height: 50px;">
+  <ion-content  scrollX="true" scrollY="false" style="white-space: nowrap; height: 50px;">
     <ion-button size="small" (click)="selectCollection(item.name)" [fill]="item.name === selectedCollection? 'solid' : 'outline'" [color]="item.name === 'sale' ? 'danger' : 'dark'" *ngFor="let item of collectionsArr" style="display: inline-block;">
       {{capitalizeName(item.name)}}
     </ion-button>

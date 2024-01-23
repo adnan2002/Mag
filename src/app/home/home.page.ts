@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {Swiper} from 'swiper';
 
 import { FirebaseService } from '../firebase.service';
-import { ActionSheetController, NavController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, NavController } from '@ionic/angular';
 
 import {pipe, filter ,map, BehaviorSubject, Observable} from 'rxjs';
 import {shareReplay} from 'rxjs/operators';
@@ -27,6 +27,11 @@ export class HomePage implements OnInit {
   collectionsArr:any = [];
 
   async ngOnInit() {
+    let loader = await this.loadingController.create({
+      spinner: 'dots',
+    });
+    loader.present();
+
     this.collectionsArr = await this.firestore.getUniqueCollections();
     this.collectionsArr = this.collectionsArr.filter((item:any) => item.name !== 'sale' && item.name !== 'magnolia picks' && item.name !== 'shine from the inside out' );
   
@@ -35,6 +40,8 @@ export class HomePage implements OnInit {
 
   
     this.selectedCollection = this.collectionsArr[0].name;
+
+    loader.dismiss();
 
 }
 
@@ -127,7 +134,7 @@ capitalizeName(name: string): string {
   
   
 
-  constructor(private firestore: FirebaseService, public actionSheetController: ActionSheetController, private nav:NavController ) {
+  constructor(private loadingController:LoadingController,private firestore: FirebaseService, public actionSheetController: ActionSheetController, private nav:NavController ) {
     this.products$ = this.firestore.getProducts().pipe(shareReplay(1));
 
     // gets the products with inventory > 0

@@ -8,6 +8,7 @@ import { CartmodalPageRoutingModule } from './cartmodal-routing.module';
 
 import { CartmodalPage } from './cartmodal.page';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +16,7 @@ import { CartmodalPage } from './cartmodal.page';
     IonicModule,
     CartmodalPageRoutingModule
   ],
-  declarations: [CartmodalPage]
+  declarations: [CartmodalPage],
+ 
 })
 export class CartmodalPageModule {}

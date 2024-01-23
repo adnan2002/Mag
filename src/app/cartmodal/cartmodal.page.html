@@ -1,5 +1,5 @@
 
-<ion-header [translucent]="true">
+<ion-header [translucent]="false">
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button color="dark" size="large" (click)="dismissModal()"><ion-icon size="large" name="close-circle-outline"></ion-icon></ion-button>
@@ -8,9 +8,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="false" scrollEvents="true" scrollX="false" scrollY="true"  >
+  <ion-list>
+    <ion-item-sliding *ngFor="let product of products$ | async">
+
+    <ion-item (click)="goTo(product.id)">
+      <div style="display: flex; margin-top: 20px; margin-bottom: 20px">
+        <img [src]="product.image" style="border-radius: 10px; width: 100px; height: 100px;">
+        <div style="display: flex; flex-direction: column; margin-left: 15px; gap:10px">
+          <ion-text color="dark" style="font-size: 16px; font-weight: bold;">{{product.title}}</ion-text>
+          <ion-text color="dark" style="font-size: 20px;">BHD <span style="font-weight: bold;">{{product.new_price.toFixed(2)}}</span></ion-text>
+          <div *ngIf="product.old_price - product.new_price !== 0" style="display: flex; flex-direction: row; gap: 4px">
+            <span style="text-decoration: line-through; color: #92949c; font-size: 14px;">BHD {{product.old_price.toFixed(2)}}</span>
+            <span style="color: red; font-weight: bold; font-size:14px">{{((product.old_price - product.new_price) / product.old_price * 100).toFixed(0) + '% OFF'}}</span>
+          </div>
+          <ion-text>Quantity: {{product.quantity}}</ion-text>
+          <ion-text *ngIf="product.variant">Variant: <span style="font-weight: bold;">{{product.variant}}</span></ion-text>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item-options side="end">
+      <ion-item-option color="danger" (click)="deleteProduct(product.id, product.variant)">Delete</ion-item-option>
+    </ion-item-options>
+
+  </ion-item-sliding>
+    <div style="height: 500px">
+
+    </div>
+  </ion-list>
+  
+  
 
 </ion-content>
+
+<ion-footer [translucent]="false" style="position: fixed; top: 365px" >
+  <ion-button  color="dark" expand="block">Go To My Bag</ion-button>
+</ion-footer>
 
 
 
