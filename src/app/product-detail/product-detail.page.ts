@@ -1,10 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController } from '@ionic/angular';
 import { FirebaseService } from '../firebase.service';
 import {Swiper} from 'swiper'
 import { Storage } from '@ionic/storage-angular';
 import { CartService } from '../cart.service';
+import { CartmodalPage } from '../cartmodal/cartmodal.page';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class ProductDetailPage implements OnInit {
   selectedVariant:any = {};
   disabledVariant = false;
 
-  constructor(private cdr: ChangeDetectorRef,private route: ActivatedRoute, private nav:NavController, private firebase: FirebaseService, private storage:Storage, private cartService: CartService) { 
+  constructor(private cdr: ChangeDetectorRef,private route: ActivatedRoute, private nav:NavController, private firebase: FirebaseService, private storage:Storage, private cartService: CartService, private modalController: ModalController, private loadingController: LoadingController) { 
     this.init();
   }
 
@@ -85,6 +86,8 @@ export class ProductDetailPage implements OnInit {
     this.disabledVariant = this.formMaxVariant == 0;
     this.cdr.detectChanges();
     this.cartService.cartUpdate.next();
+
+    await this.openModal();
   }
   
   
@@ -111,6 +114,7 @@ export class ProductDetailPage implements OnInit {
     }
 
     this.cartService.cartUpdate.next();
+    await this.openModal();
   }
 
   updateDisabled() {
@@ -174,6 +178,28 @@ export class ProductDetailPage implements OnInit {
   
     this.goNext(this.selectedVariant.index);
     this.cdr.detectChanges();
+  }
+
+
+  async openModal(){
+    const modal = await this.modalController.create({
+      component: CartmodalPage,
+      cssClass: 'cart-modal',
+      backdropDismiss: true,
+    });
+    modal.initialBreakpoint = 0.5;
+
+    const loading = await this.loadingController.create({
+      spinner: 'dots',
+      duration: 250
+    });
+  
+    await loading.present();
+  
+    // Wait for the loading to finish
+    await loading.onDidDismiss();
+  
+    return await modal.present();
   }
   
   

@@ -26,4 +26,12 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 
+.cart-modal{
+    &::part(content){
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+    }
+}
+
+
 

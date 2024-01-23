@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'tabs/home/product-detail/:id',
     loadChildren: () => import('./product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
+  },  {
+    path: 'cartmodal',
+    loadChildren: () => import('./cartmodal/cartmodal.module').then( m => m.CartmodalPageModule)
   }
+
 
 
 ];

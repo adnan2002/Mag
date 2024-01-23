@@ -75,4 +75,6 @@
   <ion-button *ngIf="!productObject.variants" expand="full" color="dark" (click)="addToBagNonVariant()" [disabled]="!(formQuantity > 0) || disabled" ><span style="font-weight: bold">{{'Add to Bag'}}</span></ion-button>
   <ion-button *ngIf="productObject.variants" expand="full" color="dark" (click)="addToBagVariant()" [disabled]="!(formQuantityVariant > 0) || disabledVariant" ><span style="font-weight: bold">{{'Add to Bag'}}</span></ion-button>
 
+  <!-- <ion-button (click)="openModal()">Open Modal</ion-button> -->
+
 </ion-footer>
