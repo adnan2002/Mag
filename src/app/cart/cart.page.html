@@ -1,13 +1,52 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-title>cart</ion-title>
+    <ion-title>My Bag</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">cart</ion-title>
+      <ion-title size="large">My Bag</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ng-container *ngIf="(products$ | async) as products">
+    <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="products.length === 0">
+      <img src="assets/empty_bag.png" >
+    </div>
+
+    <ion-list *ngIf="products.length > 0">
+      <ion-item *ngFor="let product of products; let i = index">
+        <div style="display: flex; margin-bottom: 25px; width: 100%">
+        <img [src]="product.image" style="border-radius: 10px; width: 100px; height: 75px;">
+      
+        <div style="display: flex; flex-direction: column; margin-left: 15px; gap:8px; margin-top: 5px; ">
+          <ion-text color="dark" style="font-size: 16px; font-weight: bold;">{{product.vendor}}</ion-text>
+          <ion-text color="medium" style="font-style: italic;">{{removeBracketsAndContent(product.title)}}</ion-text>
+          <ion-text *ngIf="product.variant" color="dark"><span>{{product.variant}}</span></ion-text>
+          <ion-text *ngIf="product.old_price - product.new_price === 0" color="dark" style="font-size: 15px;">BHD <span style="font-weight: bold;">{{product.new_price.toFixed(2)}}</span></ion-text>
+
+          <div *ngIf="product.old_price - product.new_price !== 0" style="display: flex; flex-direction: row; gap: 4px">
+            <ion-text color="dark" style="font-size: 15px;">BHD <span style="font-weight: bold;">{{product.new_price.toFixed(2)}}</span></ion-text>
+            <span style="text-decoration: line-through; color: #92949c; font-size: 14px;">BHD {{product.old_price.toFixed(2)}}</span>
+            <span style="color: red; font-weight: bold; font-size:14px">{{((product.old_price - product.new_price) / product.old_price * 100).toFixed(0) + '% OFF'}}</span>
+          </div>
+        </div>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
+          <ion-button color="dark" fill="clear" (click)="minus(product.id, product.variant)" size="default"><ion-icon  name="remove-outline"></ion-icon></ion-button>
+          <ion-text style="margin-left: 5px; margin-right: 5px">{{product.quantity}}</ion-text>
+          <ion-button color="dark" (click)="add(product.id, product.variant)" fill="clear" [disabled]="product.disabled" size="default"><ion-icon name="add-outline"></ion-icon></ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>
+
+
+<ion-footer>
+  <ion-button expand="block" color="dark" >Checkout</ion-button>
+</ion-footer>
+
+

@@ -32,6 +32,7 @@ export class TabsPage implements OnInit {
     this.cartItemCount = this.cartService.getCartItemCount();
     this.cartService.initializeCart();
     
+    
 }
 
 

@@ -36,6 +36,8 @@ export class CartmodalPage implements OnInit {
             new_price: variant.new_price,
             old_price: variant.old_price,
             title: product.title,
+            variant_inventory: variant.inventory,
+            vendor: product.vendor,
             quantity: item.quantity,
             variant: item.variant
           };
@@ -46,7 +48,9 @@ export class CartmodalPage implements OnInit {
           id: product.id,
           image: product.images[0],
           new_price: product.new_price,
+          vendor: product.vendor,
           old_price: product.old_price,
+          inventory: product.inventory,
           title: product.title,
           quantity: val
         };
@@ -92,7 +96,9 @@ goTo(id:String){
 
 }
 
-
-
+goToCart(){
+  this.dismissModal();
+  this.nav.navigateForward('/tabs/cart');
+}
 
 }

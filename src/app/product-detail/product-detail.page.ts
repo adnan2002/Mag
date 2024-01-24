@@ -86,6 +86,7 @@ export class ProductDetailPage implements OnInit {
     this.disabledVariant = this.formMaxVariant == 0;
     this.cdr.detectChanges();
     this.cartService.cartUpdate.next();
+    this.cartService.refreshCart();
 
     await this.openModal();
   }
@@ -114,6 +115,7 @@ export class ProductDetailPage implements OnInit {
     }
 
     this.cartService.cartUpdate.next();
+    this.cartService.refreshCart();
     await this.openModal();
   }
 
