@@ -1,5 +1,8 @@
 <ion-header [translucent]="false">
   <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="clearCart()">Clear</ion-button>
+    </ion-buttons>
     <ion-title>My Bag</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -17,7 +20,8 @@
     </div>
 
     <ion-list *ngIf="products.length > 0">
-      <ion-item *ngFor="let product of products; let i = index">
+      <ion-item-sliding *ngFor="let product of products; let i = index">
+      <ion-item >
         <div style="display: flex; margin-bottom: 25px; width: 100%">
         <img [src]="product.image" style="border-radius: 10px; width: 100px; height: 75px;">
       
@@ -40,6 +44,10 @@
           <ion-button color="dark" (click)="add(product.id, product.variant)" fill="clear" [disabled]="product.disabled" size="default"><ion-icon name="add-outline"></ion-icon></ion-button>
         </div>
       </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="delete(product.id, product.variant)">Delete</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
     </ion-list>
   </ng-container>
 </ion-content>

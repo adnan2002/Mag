@@ -29,7 +29,7 @@ export class TabsPage implements OnInit {
 
 
   ngOnInit() {
-    this.cartItemCount = this.cartService.getCartItemCount();
+    this.cartItemCount = this.cartService.cartItemCount.asObservable();
     this.cartService.initializeCart();
     
     

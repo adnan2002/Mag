@@ -13,7 +13,7 @@
     <ion-tab-button tab="cart">
       <ion-icon [name]="selectedTab === 'cart' ? 'bag-handle' : 'bag-handle-outline'"></ion-icon>
       <ion-label>Bag</ion-label>
-      <ion-badge style="background-color: #C99B9B;" *ngIf="cartItemCount | async as count; else noCount" color="danger">{{count}}</ion-badge>
+      <ion-badge style="background-color: #C99B9B;" *ngIf="cartItemCount | async as count; else noCount " color="danger">{{count}}</ion-badge>
       <ng-template #noCount></ng-template>
 
     </ion-tab-button>

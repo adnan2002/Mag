@@ -13,6 +13,7 @@ export class CartService {
   public cartUpdate: Subject<void> = new Subject<void>();
 
   products$ = new BehaviorSubject<any[]>([]);
+  public cartItemCount = new BehaviorSubject<number>(0);
 
 
   async refreshCart(){
@@ -23,6 +24,7 @@ export class CartService {
     await this.storage.create();
     let keys = await this.storage.keys();
     let products = [];
+    let count = 0;  // Initialize the cart count
     for (let key of keys) {
       let val = await this.storage.get(key);
       let product = await this.firebase.getProductById(key);
@@ -41,6 +43,7 @@ export class CartService {
             variant: item.variant
           };
           products.push(productDetails);
+          count ++;  // Update the cart count
         }
       } else {
         let productDetails = {
@@ -54,13 +57,15 @@ export class CartService {
           quantity: val
         };
         products.push(productDetails);
+        count ++;  // Update the cart count
       }
     }
     this.products$.next(products);
+    this.cartItemCount.next(count);  // Update the cart count
 
     await loading.dismiss();
+}
 
-  }
 
   constructor(private storage: Storage, private loadingController:LoadingController, private firebase:FirebaseService) { 
     this.init();
