@@ -5,6 +5,7 @@ import { FirebaseService } from '../firebase.service';
 import { BehaviorSubject } from 'rxjs';
 import { CartService } from '../cart.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -15,14 +16,40 @@ export class CartPage implements OnInit {
   products$ = new BehaviorSubject<any[]>([]);
   productsArr:any;
   disabled = false;
-
+  delivery:any;
   constructor(private cdr:ChangeDetectorRef,private cartService:CartService, private firebase:FirebaseService, private storage:Storage) {
-    
+    this.getDelivery();
    }
 
    removeBracketsAndContent(input: string): string {
     return input.replace(/\[.*?\]/g, '');
 }
+
+
+async getDelivery(){
+  this.delivery = await this.firebase.getDeliveryCharge();
+}
+getTotalPrice(): Observable<any> {
+  return this.products$.pipe(
+    map((products:any) => {
+      const total = products.reduce((acc:number, product:any) => acc + (product.quantity * product.new_price), 0);
+      return { total };
+    })
+  );
+}
+
+
+// getTotalPriceWithDelivery(): Observable<any> {
+//   return this.products$.pipe(
+//     map((products:any) => {
+//       const total = products.reduce((acc:number, product:any) => acc + (product.quantity * product.new_price), 0);
+//       const delivery:any = total >= this.delivery?.threshold ? 'Delivery Charge: Free Delivery' : `Delivery Charge: BHD ${this.delivery?.charge}`;
+//       const grandTotal:any = total >= this.delivery?.threshold ? total : total + this.delivery?.charge;
+//       return { delivery, grandTotal };
+//     })
+//   );
+// }
+
 
 
   
@@ -43,13 +70,13 @@ export class CartPage implements OnInit {
   }
 
 
-async clearCart(){
-    await this.storage.clear();
-    // this.cartService.initializeCart(); 
-    // this.cartService.cartItemCount.next(0);
-    this.ngOnInit();  // Reset the cart count
-     // Recalculate the cart item count
-}
+// async clearCart(){
+//     await this.storage.clear();
+//     // this.cartService.initializeCart(); 
+//     // this.cartService.cartItemCount.next(0);
+//     this.ngOnInit();  // Reset the cart count
+//      // Recalculate the cart item count
+// }
 
 async add(id:string, variantName?:string){
   let product = this.productsArr.find((val:any)=> val.id === id && val.variant === variantName);
@@ -59,6 +86,7 @@ async add(id:string, variantName?:string){
     if(new_quant <= product.inventory){
       product.quantity++;
       await this.storage.set(id, new_quant);
+      this.cartService.cartItemCount.next(this.cartService.cartItemCount.value + 1);
     }else{
       product.disabled = true;
     }
@@ -76,6 +104,7 @@ async add(id:string, variantName?:string){
         product.quantity = variant.quantity;
         variant.disabled = new_quant > product.variant_inventory;
         await this.storage.set(id, localPros);
+        this.cartService.cartItemCount.next(this.cartService.cartItemCount.value + 1);
       }
     }
     if(product.quantity === product.variant_inventory){
@@ -124,6 +153,7 @@ async minus(id:string, variantName?:string){
     if(new_quant > 0){
       product.quantity--;
       await this.storage.set(id, new_quant);
+      this.cartService.cartItemCount.next(this.cartService.cartItemCount.value - 1);
     }else{
       product.disabled = false;
       await this.storage.remove(id);
@@ -143,6 +173,7 @@ async minus(id:string, variantName?:string){
         variant.quantity--;
         product.quantity = variant.quantity;
         await this.storage.set(id, localPros);
+        this.cartService.cartItemCount.next(this.cartService.cartItemCount.value - 1);
       }else{
         localPros.splice(variantIndex, 1);
         if(localPros.length > 0){
@@ -150,6 +181,7 @@ async minus(id:string, variantName?:string){
         }else{
           await this.storage.remove(id);
         }
+        this.cartService.cartItemCount.next(this.cartService.cartItemCount.value - 1);
          this.ngOnInit();
       }
       // Add this line to re-enable the add button

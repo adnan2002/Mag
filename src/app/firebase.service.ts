@@ -88,6 +88,25 @@ export class FirebaseService implements OnInit  {
   
     return productSnapshot.data();
   }
+
+  async getDeliveryCharge(): Promise<any> {
+    const deliveryChargeCollection = collection(this.firestore, 'deliveryCharge');
+    const deliveryChargeSnapshot = await getDocs(deliveryChargeCollection);
+  
+    // Check if the collection is not empty
+    if (!deliveryChargeSnapshot.empty) {
+      // Get the first document
+      const firstDoc = deliveryChargeSnapshot.docs[0];
+  
+      // Return the 'charge' value
+      return {charge: firstDoc.data()['charge'], threshold: firstDoc.data()['threshold']};
+    } else {
+      throw new Error('The deliveryCharge collection is empty.');
+    }
+  }
+  
+
+
   
   
   

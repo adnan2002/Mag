@@ -43,7 +43,7 @@ export class CartService {
             variant: item.variant
           };
           products.push(productDetails);
-          count ++;  // Update the cart count
+          count += item.quantity  // Update the cart count
         }
       } else {
         let productDetails = {
@@ -57,7 +57,7 @@ export class CartService {
           quantity: val
         };
         products.push(productDetails);
-        count ++;  // Update the cart count
+        count += val // Update the cart count
       }
     }
     this.products$.next(products);

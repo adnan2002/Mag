@@ -1,18 +1,18 @@
 <ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <ion-button (click)="clearCart()">Clear</ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
     <ion-title>My Bag</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">My Bag</ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
 
   <ng-container *ngIf="(products$ | async) as products">
     <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;" *ngIf="products.length === 0">
@@ -23,7 +23,7 @@
       <ion-item-sliding *ngFor="let product of products; let i = index">
       <ion-item >
         <div style="display: flex; margin-bottom: 25px; width: 100%">
-        <img [src]="product.image" style="border-radius: 10px; width: 100px; height: 75px;">
+        <img [src]="product.image" style="border-radius: 10px; width: 100px; height: 100px; margin-top: 10px;">
       
         <div style="display: flex; flex-direction: column; margin-left: 15px; gap:8px; margin-top: 5px; ">
           <ion-text color="dark" style="font-size: 16px; font-weight: bold;">{{product.vendor}}</ion-text>
@@ -53,8 +53,13 @@
 </ion-content>
 
 
-<ion-footer>
-  <ion-button expand="block" color="dark" >Checkout</ion-button>
+<ion-footer style="background-color: white;">
+  <ion-toolbar *ngIf="productsArr.length > 0">
+    <ion-text slot="end" color="dark" style="font-size: 20px; font-weight: bold; margin-right: 6px" *ngIf="(getTotalPrice() | async) as totalPrice">
+      <span style="font-size: 16px; color: rgb(100, 100, 100); margin-right: 10px">Total</span> <span style="font-weight: 300">BHD</span> {{totalPrice?.total.toFixed(2)}}
+    </ion-text>
+  </ion-toolbar>
+  <ion-button expand="block" color="dark" [disabled]="!(productsArr.length > 0)" >Checkout</ion-button>
 </ion-footer>
 
 
