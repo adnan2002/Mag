@@ -22,7 +22,7 @@ export class CartPage implements OnInit {
    }
 
    removeBracketsAndContent(input: string): string {
-    return input.replace(/\[.*?\]/g, '');
+    return input.replace(/\[.*?\]\s*-?/g, '');
 }
 
 

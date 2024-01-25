@@ -37,7 +37,7 @@ export class ProductDetailPage implements OnInit {
   }
 
   goBack(){
-    this.nav.navigateBack('/');
+    this.nav.back();
   }
 
   search(){
