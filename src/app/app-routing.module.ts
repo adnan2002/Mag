@@ -37,6 +37,10 @@ const routes: Routes = [
   },  {
     path: 'cartmodal',
     loadChildren: () => import('./cartmodal/cartmodal.module').then( m => m.CartmodalPageModule)
+  },
+  {
+    path: 'signup',
+    loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
   }
 
 
