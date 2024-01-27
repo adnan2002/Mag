@@ -10,4 +10,8 @@
       <ion-title size="large">profile</ion-title>
     </ion-toolbar>
   </ion-header>
+
+
+  <ion-text >{{user ? 'User is signed in' : 'User no signed in' }}</ion-text>
+  <ion-button (click)="signOut()">Sign out</ion-button>
 </ion-content>

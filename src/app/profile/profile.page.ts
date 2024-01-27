@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FirebaseService } from '../firebase.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfilePage implements OnInit {
 
-  constructor() { }
+  constructor(private firebase:FirebaseService) { }
+
+  user:any;
 
   ngOnInit() {
+    this.firebase.getAuthState().subscribe(user => {
+      if(user){
+        this.user = user;
+        console.log(this.user);
+      }else{
+        this.user = null;
+      }
+    })
+
+  }
+
+
+  async signOut(){
+    await this.firebase.signOut();
+    this.ngOnInit();
   }
 
 }

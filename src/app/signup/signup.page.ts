@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FirebaseService } from '../firebase.service';
+import { LoadingController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -9,8 +11,13 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 export class SignupPage implements OnInit {
 
  formGroup: FormGroup | any;
+ showPassword = false;
+ showCheckPassword = false
 
-  constructor(private formBuilder: FormBuilder) { }
+
+
+
+  constructor(private nav:NavController,private formBuilder: FormBuilder, private firebase:FirebaseService, private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
@@ -19,15 +26,25 @@ export class SignupPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required,Validators.min(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]+$')]],
       confirmPassword: ['', [Validators.required,Validators.min(6), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]+$')]],
-      address: this.formBuilder.group({
-        house: ['', Validators.required],
-        road: ['', Validators.required],
-        city: ['', Validators.required],
-        block: ['', Validators.required]
-      }),
      }, { validator: this.MustMatch('password', 'confirmPassword') });
 
     
+  }
+
+  checkLength(): boolean {
+    return this.formGroup.get('password').value.length >= 6;
+  }
+
+  checkUpperCase(): boolean {
+    return /[A-Z]/.test(this.formGroup.get('password').value);
+  }
+
+  checkLowerCase(): boolean {
+    return /[a-z]/.test(this.formGroup.get('password').value);
+  }
+
+  checkNumber(): boolean {
+    return /[0-9]/.test(this.formGroup.get('password').value);
   }
   
 
@@ -50,10 +67,42 @@ export class SignupPage implements OnInit {
     }
   }
 
-  onSubmit() {
-    if(this.formGroup.valid) {
-      console.log(this.formGroup.value);
-    } 
+  checkConfirmPassword(){
+    return this.formGroup.get('password').value === this.formGroup.get('confirmPassword').value;
   }
 
+  checkPassword(){
+    return this.checkLength() && this.checkUpperCase() && this.checkLowerCase() && this.checkNumber();
+  }
+
+  toggleShowPassword(){
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleShowCheckPassword(){
+    this.showCheckPassword = !this.showCheckPassword;
+  }
+
+  async onSubmit() {
+    if(this.formGroup.valid) {
+      const loading = await this.loadingController.create({
+        spinner: 'dots',
+      });
+      try {
+        loading.present();
+  
+        const noError = await this.firebase.signUp(this.formGroup.value);
+  
+       await  loading.dismiss();
+  
+        if(noError){
+       await  this.nav.navigateRoot('/tabs/home');
+        }
+      } catch(error:any) {
+        loading.dismiss();
+        console.log(error);
+      }
+    } 
+  }
+  
 }

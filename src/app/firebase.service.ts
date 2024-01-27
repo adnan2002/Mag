@@ -1,14 +1,23 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import {onSnapshot,Firestore, collection, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, addDoc, CollectionReference } from '@angular/fire/firestore'
-
+import {onSnapshot,Firestore, collection, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, addDoc, CollectionReference, setDoc } from '@angular/fire/firestore'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail, sendEmailVerification, User, onAuthStateChanged } from '@angular/fire/auth';
+import { AlertController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService implements OnInit  {
 
-  constructor(private firestore:Firestore) { }
+  private authState = new BehaviorSubject(null);
+
+  constructor(private alertController:AlertController,private firestore:Firestore) {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user:any) => {
+      this.authState.next(user);
+    });
+   }
 
   ngOnInit() {
   }
@@ -104,6 +113,80 @@ export class FirebaseService implements OnInit  {
       throw new Error('The deliveryCharge collection is empty.');
     }
   }
+
+
+  async signUp(data:any){
+   const  {email, password, firstName, lastName} =data ;
+    const auth = getAuth();
+   try{
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    
+
+    await setDoc(doc(this.firestore, 'users', result.user.uid), {
+      uid: result.user.uid,
+      firstName,
+      lastName,
+      email,
+    });
+
+    // await sendEmailVerification(result.user);
+
+    return true;
+
+   }catch(error:any){
+    console.error('Error signing up:', error);
+
+    let message = 'Error signing up';
+    if (error['code'] === 'auth/email-already-in-use') {
+      message = 'The email is already taken';
+    }
+
+    // Display an error message using an alert controller
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+    return false;
+   }
+
+
+
+
+  }
+
+  async signOut() {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      console.log('User signed out');
+      return true;
+    } catch (error) {
+      console.error('Error signing out:', error);
+      return false;
+    }
+  }
+
+  async signIn(data:any) {
+    const { email, password } = data;
+    const auth = getAuth();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log('User signed in');
+      return true;
+    } catch (error) {
+      console.error('Error signing in:', error);
+      return false;
+    }
+  }
+
+  getAuthState() {
+    return this.authState.asObservable();
+  }
+
+
   
 
 
