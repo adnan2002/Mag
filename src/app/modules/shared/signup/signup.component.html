@@ -45,9 +45,10 @@
 
   <!-- Submit Button -->
   <ion-button type="submit" [disabled]="!formGroup.valid" expand="block" color="dark">Create Account</ion-button>
+  <div style="margin-top: 20px">
+    <ion-text>Already have an account? <span (click)="toggle.emit()" style=" color: #C99B9B; font-weight: bold; border-bottom: 2px solid #C99B9B;">Sign In</span></ion-text> <!-- Sign in button -->
+  </div>
 </div>
 
-<div>
-  <ion-text>Already have an account? <span style=" color: #C99B9B; font-weight: bold; border-bottom: 2px solid #C99B9B">Sign In</span></ion-text>
-</div>
+
 </form>

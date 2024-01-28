@@ -176,11 +176,16 @@ export class FirebaseService implements OnInit  {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User signed in');
       return true;
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error signing in:', error);
-      return false;
+      return error.code; // return the error code
     }
   }
+
+  async forgotPassword(email:string){
+
+  }
+  
 
   getAuthState() {
     return this.authState.asObservable();

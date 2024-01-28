@@ -7,6 +7,12 @@ import { FirebaseService } from '../firebase.service';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
+  showSignin = true;
+
+
+  toggleShowSignin(){
+    this.showSignin = !this.showSignin
+  }
 
   constructor(private firebase:FirebaseService) { }
 
@@ -28,6 +34,7 @@ export class ProfilePage implements OnInit {
   async signOut(){
     await this.firebase.signOut();
     this.ngOnInit();
+    this.showSignin = true;
   }
 
 }

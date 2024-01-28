@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import{NavController} from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseService } from '../../../firebase.service';
@@ -11,6 +11,8 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent  implements OnInit {
+
+  @Output() toggle = new EventEmitter<void>();
 
 
   formGroup: FormGroup | any;
@@ -99,7 +101,7 @@ export class SignupComponent  implements OnInit {
         await  loading.dismiss();
    
          if(noError){
-        await  this.nav.navigateRoot('/tabs/home');
+        await  this.nav.navigateRoot('/tabs/profile');
          }
        } catch(error:any) {
          loading.dismiss();
