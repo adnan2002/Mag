@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/firebase.service';
+import { ModalController } from '@ionic/angular';
+import { ForgotpassmodalPage } from 'src/app/forgotpassmodal/forgotpassmodal.page';
 
 @Component({
   selector: 'app-signin',
@@ -15,7 +17,7 @@ export class SigninComponent  implements OnInit {
 
 
 
-  constructor(private formBuilder:FormBuilder, private toastController:ToastController, private firebase:FirebaseService, private loadingController: LoadingController, private nav:NavController) { }
+  constructor(private formBuilder:FormBuilder, private toastController:ToastController, private firebase:FirebaseService, private loadingController: LoadingController, private nav:NavController, private modalController:ModalController) { }
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
@@ -83,6 +85,16 @@ export class SigninComponent  implements OnInit {
   }
 
 
+
+  }
+
+  async forgotPass(){
+    const modal = await this.modalController.create({
+      component: ForgotpassmodalPage,
+      cssClass: 'forgotpassmodal'
+    });
+
+    modal.present();
 
   }
 

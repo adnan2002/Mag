@@ -10,7 +10,7 @@
   <ion-button (click)="onSubmit()" expand="block" color="dark" style="margin-top: 20px">Sign In</ion-button>
 
   <div style="width: 100%; display: flex; flex-direction: column ;align-items: center; margin-top: 15px">
-  <ion-button  color="medium" fill="clear">Forgot Password?</ion-button>
+  <ion-button  color="medium" fill="clear" (click)="forgotPass()">Forgot Password?</ion-button>
   <ion-text style="align-self: center; margin-top: 10px">Don't have an account? <span (click)="toggle.emit()" style=" color: #C99B9B; font-weight: bold; border-bottom: 2px solid #C99B9B;">Create Account</span></ion-text>
 
   </div>

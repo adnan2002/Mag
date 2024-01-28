@@ -41,6 +41,10 @@ const routes: Routes = [
   {
     path: 'signup',
     loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
+  },
+  {
+    path: 'forgotpassmodal',
+    loadChildren: () => import('./forgotpassmodal/forgotpassmodal.module').then( m => m.ForgotpassmodalPageModule)
   }
 
 
