@@ -19,6 +19,7 @@ export class ProfilePage implements OnInit {
   user:any;
 
   ngOnInit() {
+    this.showSignin = true;
     this.firebase.getAuthState().subscribe(user => {
       if(user){
         this.user = user;
