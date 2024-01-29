@@ -1,21 +1,39 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-buttons slot="end" *ngIf="user">
+      <ion-button color="dark" size="large" (click)="presentSignOutAlert()"><ion-icon size="large" name="log-out-outline"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title>{{title()}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
+      <ion-title size="large">{{title()}}</ion-title>
     </ion-toolbar>
+   
   </ion-header>
 
 
-  <ion-text >{{user ? 'User is signed in' : 'User no signed in' }}</ion-text>
-  <ion-button (click)="signOut()">Sign out</ion-button>
+  
 
   <app-signup *ngIf="!showSignin && !user" (toggle)="toggleShowSignin()"></app-signup>
   <app-signin *ngIf="showSignin && !user" (toggle)="toggleShowSignin()"></app-signin>
+  <div *ngIf="user">
+    
+    <ion-text>Hello, {{userObj?.firstName + ' '+ userObj?.lastName}}</ion-text>
+    <ion-list>
+      <ion-item>
+        Saved Addresses
+      </ion-item>
+      <ion-item>
+        Past Orders
+      </ion-item>
+      <ion-item>
+        Contact Us
+      </ion-item>
+    </ion-list>
+</div>
   
 </ion-content>

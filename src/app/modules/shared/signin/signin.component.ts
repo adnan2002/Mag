@@ -91,8 +91,11 @@ export class SigninComponent  implements OnInit {
   async forgotPass(){
     const modal = await this.modalController.create({
       component: ForgotpassmodalPage,
-      cssClass: 'forgotpassmodal'
+      cssClass: 'forgot-passmodal',
+      backdropDismiss: true
     });
+
+    modal.initialBreakpoint = 0.8
 
     modal.present();
 

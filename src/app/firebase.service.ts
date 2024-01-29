@@ -182,8 +182,34 @@ export class FirebaseService implements OnInit  {
     }
   }
 
-  async forgotPassword(email:string){
+  async forgotPassword(email: string) {
+    const auth = getAuth();
+    try {
+      await sendPasswordResetEmail(auth, email);
+      console.log('Password reset email sent');
+      return true;
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      return false
+    }
+  }
 
+  async  getUserByUid(uid:string) {
+    const userRef = doc(this.firestore, 'users', uid);
+    const userSnap = await getDoc(userRef);
+  
+    if (userSnap.exists()) {
+      return userSnap.data();
+    } else {
+      return null;
+    }
+  }
+
+  async isEmailFound(email: string): Promise<boolean> {
+    const usersRef = collection(this.firestore, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
   }
   
 
