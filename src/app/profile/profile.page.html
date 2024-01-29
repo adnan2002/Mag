@@ -22,7 +22,7 @@
   <app-signin *ngIf="showSignin && !user" (toggle)="toggleShowSignin()"></app-signin>
   <div *ngIf="user">
     
-    <ion-text>Hello, {{userObj?.firstName + ' '+ userObj?.lastName}}</ion-text>
+    <ion-text>Hello, {{userObj?.firstName}}</ion-text>
     <ion-list>
       <ion-item>
         Saved Addresses

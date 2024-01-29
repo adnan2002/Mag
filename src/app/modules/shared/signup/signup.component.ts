@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import{NavController} from '@ionic/angular';
+import{NavController, ToastController} from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseService } from '../../../firebase.service';
 import { LoadingController } from '@ionic/angular';
@@ -22,7 +22,7 @@ export class SignupComponent  implements OnInit {
  
  
  
-   constructor(private nav:NavController,private formBuilder: FormBuilder, private firebase:FirebaseService, private loadingController: LoadingController) { }
+   constructor(private toastController:ToastController,private nav:NavController,private formBuilder: FormBuilder, private firebase:FirebaseService, private loadingController: LoadingController) { }
  
    ngOnInit() {
      this.formGroup = this.formBuilder.group({
@@ -102,6 +102,13 @@ export class SignupComponent  implements OnInit {
    
          if(noError){
         await  this.nav.navigateRoot('/tabs/profile');
+         }else{
+          const toast = await this.toastController.create({
+            message: 'Error Signing Up.',
+            duration: 1000,
+            color: 'danger'
+          });
+          toast.present();
          }
        } catch(error:any) {
          loading.dismiss();

@@ -68,7 +68,9 @@ export class SigninComponent  implements OnInit {
         let message = '';
         if (result === 'auth/invalid-credential') {
           message = 'Email or Password is incorrect.';
-        } 
+        } else{
+          message = "Unknown Error."
+        }
   
         const toast = await this.toastController.create({
           message: message,
