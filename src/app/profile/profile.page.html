@@ -20,20 +20,32 @@
 
   <app-signup *ngIf="!showSignin && !user" (toggle)="toggleShowSignin()"></app-signup>
   <app-signin *ngIf="showSignin && !user" (toggle)="toggleShowSignin()"></app-signin>
-  <div *ngIf="user">
+  <div *ngIf="user" style="margin-top: 50px">
     
-    <ion-text>Hello, {{userObj?.firstName}}</ion-text>
-    <ion-list>
+    <ion-text color="dark" style="font-weight: bold; font-size: 30px; margin-left: 15px">Hello, {{userObj?.firstName}}</ion-text>
+    <ion-list style="margin-top: 20px; margin-left: 10px; margin-right: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25); border-radius: 10px;">
       <ion-item>
         Saved Addresses
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>
       <ion-item>
         Past Orders
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item>
+        Change Email
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item>
+        Change Password
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>
       <ion-item>
         Contact Us
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>
     </ion-list>
+    
 </div>
   
 </ion-content>

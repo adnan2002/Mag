@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "956162261899",
+    "project_id": "magnolia-9e1f1",
+    "storage_bucket": "magnolia-9e1f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956162261899:android:a1d63c3c5895d1a160258e",
+        "android_client_info": {
+          "package_name": "com.magnolia.mag"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "956162261899-vhluqqv5vqohmhjvt9fhuqt038l5fpj3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magnolia.mag",
+            "certificate_hash": "485e5e8bca8fe0fc55b9e5292a8e50114d673427"
+          }
+        },
+        {
+          "client_id": "956162261899-rvp2p9qictoiqno905gu1fsgjkhqsq00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvGBMZdBV7FJ6qxDkBm9JWofw5FtyiS5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "956162261899-rvp2p9qictoiqno905gu1fsgjkhqsq00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
