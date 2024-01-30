@@ -5,6 +5,9 @@ import { FirebaseService } from 'src/app/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { ForgotpassmodalPage } from 'src/app/forgotpassmodal/forgotpassmodal.page';
 
+import {GoogleAuth, GoogleAuthPlugin} from '@codetrix-studio/capacitor-google-auth'
+import { GoogleAuthProvider, getAuth,signInWithPopup}  from '@angular/fire/auth';
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -102,5 +105,17 @@ export class SigninComponent  implements OnInit {
     modal.present();
 
   }
+
+  async singInUsingGoogle(){
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+    } catch (error) {
+      console.error('Error signing in with Google: ', error);
+    }
+  }
+  
 
 }
