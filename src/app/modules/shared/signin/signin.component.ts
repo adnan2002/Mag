@@ -5,7 +5,6 @@ import { FirebaseService } from 'src/app/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { ForgotpassmodalPage } from 'src/app/forgotpassmodal/forgotpassmodal.page';
 
-import {GoogleAuth, GoogleAuthPlugin} from '@codetrix-studio/capacitor-google-auth'
 import { GoogleAuthProvider, getAuth,signInWithPopup}  from '@angular/fire/auth';
 
 @Component({
