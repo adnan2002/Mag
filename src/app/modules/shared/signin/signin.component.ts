@@ -5,7 +5,9 @@ import { FirebaseService } from 'src/app/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { ForgotpassmodalPage } from 'src/app/forgotpassmodal/forgotpassmodal.page';
 
-import { GoogleAuthProvider, getAuth,signInWithPopup}  from '@angular/fire/auth';
+import {GoogleAuth, User} from '@codetrix-studio/capacitor-google-auth'
+import { ChangeDetectorRef } from '@angular/core';
+import { isPlatform } from '@ionic/angular';
 
 @Component({
   selector: 'app-signin',
@@ -16,10 +18,17 @@ export class SigninComponent  implements OnInit {
   @Output() toggle = new EventEmitter<void>();
 
   formGroup: FormGroup | any;
+  userGoogle: any;
 
 
 
-  constructor(private formBuilder:FormBuilder, private toastController:ToastController, private firebase:FirebaseService, private loadingController: LoadingController, private nav:NavController, private modalController:ModalController) { }
+  constructor(private cdr:ChangeDetectorRef,private formBuilder:FormBuilder, private toastController:ToastController, private firebase:FirebaseService, private loadingController: LoadingController, private nav:NavController, private modalController:ModalController) {
+    if(!isPlatform('capacitor')){
+      GoogleAuth.initialize();
+    }
+
+
+   }
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
@@ -106,15 +115,12 @@ export class SigninComponent  implements OnInit {
   }
 
   async singInUsingGoogle(){
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      console.log(result);
-    } catch (error) {
-      console.error('Error signing in with Google: ', error);
-    }
-  }
+    const user: User = await GoogleAuth.signIn();
+    console.log(user)
+    this.userGoogle = user;
   
+    this.cdr.detectChanges();
+
+}
 
 }
