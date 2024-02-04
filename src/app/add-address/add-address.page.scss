@@ -1,0 +1,19 @@
+.fi{
+    background-size: contain;
+background-position: 50%;
+background-repeat: no-repeat;
+}
+
+.select-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  #countryCode {
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  

@@ -42,7 +42,16 @@ const routes: Routes = [
   {
     path: 'forgotpassmodal',
     loadChildren: () => import('./forgotpassmodal/forgotpassmodal.module').then( m => m.ForgotpassmodalPageModule)
+  },
+  {
+    path: 'tabs/profile/addresses',
+    loadChildren: () => import('./addresses/addresses.module').then( m => m.AddressesPageModule)
+  },
+  {
+    path: 'add-address',
+    loadChildren: () => import('./add-address/add-address.module').then( m => m.AddAddressPageModule)
   }
+
 
 
 

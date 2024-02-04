@@ -5,9 +5,12 @@ import { FirebaseService } from 'src/app/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { ForgotpassmodalPage } from 'src/app/forgotpassmodal/forgotpassmodal.page';
 
-import {GoogleAuth, User} from '@codetrix-studio/capacitor-google-auth'
+import {GoogleAuth, User as GoogleUser} from '@codetrix-studio/capacitor-google-auth'
 import { ChangeDetectorRef } from '@angular/core';
 import { isPlatform } from '@ionic/angular';
+
+import {getAuth, GoogleAuthProvider, signInWithCredential, User as FirebaseUser} from '@angular/fire/auth';
+import {getFirestore, doc, getDoc, setDoc, updateDoc} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-signin',
@@ -114,13 +117,54 @@ export class SigninComponent  implements OnInit {
 
   }
 
-  async singInUsingGoogle(){
-    const user: User = await GoogleAuth.signIn();
-    console.log(user)
-    this.userGoogle = user;
-  
-    this.cdr.detectChanges();
+  async signInUsingGoogle() {
+    const loader = await this.loadingController.create({
+      spinner: 'dots'
+    });
+    
+    try {
+      const user: GoogleUser | any = await GoogleAuth.signIn();
+      this.userGoogle = user;
+      this.cdr.detectChanges();
+      loader.present();
 
-}
+      // Sign in user with Firebase
+      const auth = getAuth();
+      const credential = GoogleAuthProvider.credential(user.authentication.idToken);
+      const firebaseUser: FirebaseUser = (await signInWithCredential(auth, credential)).user;
+
+      // Get a reference to the Firestore
+      const db = getFirestore();
+
+      // Check if the user already exists in Firestore
+      const userDocRef = doc(db, 'users', firebaseUser.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        // If the user already exists, just update the 'google' field
+        await updateDoc(userDocRef, { google: true });
+      } else {
+        // If the user doesn't exist, create a new document
+        await setDoc(userDocRef, {
+          email: user.email,
+          firstName: user.givenName,
+          lastName: user.familyName,
+          uid: firebaseUser.uid,
+          google: true
+        });
+      }
+
+      await loader.dismiss();
+    } catch (err:any) {
+      await loader.dismiss();
+        this.toastController.create({
+          message: 'Error In Google Sign In.',
+          duration: 1000,
+          color: 'danger'
+        }).then(toast => toast.present());
+      
+    }
+  }
+  
 
 }

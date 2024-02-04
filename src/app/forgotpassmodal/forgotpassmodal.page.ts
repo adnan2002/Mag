@@ -43,6 +43,9 @@ export class ForgotpassmodalPage implements OnInit {
       spinner: 'dots'
     })
 
+
+    let user:any = await this.firebase.getUserByEmail(this.email);
+
     
 
 
@@ -57,6 +60,16 @@ export class ForgotpassmodalPage implements OnInit {
       if(!isEmailFound){
         loader.dismiss();
         return toast.present();
+      }
+
+      if(user && user?.google){
+        const toasty = await this.toastController.create({
+          message: 'You are using Google email.',
+          color: 'danger',
+          duration: 1000
+        });
+        loader.dismiss();
+        return toasty.present();
       }
 
       const noError = await this.firebase.forgotPassword(this.email);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../firebase.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -15,10 +15,11 @@ export class ProfilePage implements OnInit {
     this.showSignin = !this.showSignin
   }
 
-  constructor(private firebase:FirebaseService, private loadingController:LoadingController, private alertController: AlertController) { }
+  constructor(private nav:NavController,private firebase:FirebaseService, private loadingController:LoadingController, private alertController: AlertController) { }
 
   user:any;
   userObj:any;
+  isGoogleUser = false;
 
   async ngOnInit() {
     const loader = await this.loadingController.create({
@@ -29,16 +30,23 @@ export class ProfilePage implements OnInit {
     this.firebase.getAuthState().subscribe(async (user:any) => {
       if(user){
         this.user = user;
-       const userOb = await this.firebase.getUserByUid(user.uid);
-       this.userObj = userOb;
-      }else{
+        console.log(user);
+        const userOb = await this.firebase.getUserByUid(user.uid);
+        this.userObj = userOb;
+  
+        // Check if the user signed in with Google
+        this.isGoogleUser = user.providerData.some(
+          (provider:any) => provider.providerId === 'google.com'
+        );
+      } else {
         this.user = null;
+        this.isGoogleUser = false;
       }
     })
-
+  
     await loader.dismiss();
-
   }
+  
 
 
   async signOut(){
@@ -77,6 +85,11 @@ export class ProfilePage implements OnInit {
     }else{
       return "Account Info"
     }
+  }
+
+
+  goToAddress(){
+    this.nav.navigateForward('tabs/profile/addresses')
   }
 
 

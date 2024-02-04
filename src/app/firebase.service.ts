@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import {onSnapshot,Firestore, collection, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, addDoc, CollectionReference, setDoc } from '@angular/fire/firestore'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail, sendEmailVerification, User, onAuthStateChanged } from '@angular/fire/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail, sendEmailVerification, User, onAuthStateChanged, user } from '@angular/fire/auth';
 import { AlertController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
@@ -203,6 +203,20 @@ export class FirebaseService implements OnInit  {
     } else {
       return null;
     }
+  }
+
+  async getUserByEmail(email:string){
+    const userCollection = collection(this.firestore, 'users');
+    const q = query(userCollection, where('email','==',email));
+    const querySnapshot = await getDocs(q);
+
+    let user = null;
+    querySnapshot.forEach((doc:any)=>{
+      user = doc.data();
+    });
+
+    return user;
+
   }
 
   async isEmailFound(email: string): Promise<boolean> {
