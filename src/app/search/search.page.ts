@@ -29,7 +29,7 @@ export class SearchPage implements OnInit, AfterViewInit {
   }
 
   goBack(){
-    this.nav.back();
+    this.nav.navigateBack('/');
   }  
 
   goToProductDetail(productId: string){

@@ -11,9 +11,39 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">addresses</ion-title>
-    </ion-toolbar>
-  </ion-header> -->
+
+
+  <ion-list *ngIf="user$ | async as user">
+
+    <div *ngIf="user.addresses; else noAddresses">
+
+    <ion-item *ngFor="let address of user.addresses">
+      <div style="width: 100%;">
+        <p><strong>Phone Number:</strong> {{address.phoneNumber}}</p>
+        <p><strong>Road:</strong> {{address.road}}</p>
+        <p><strong>Block:</strong> {{address.block}}</p>
+        <p><strong>Area:</strong> {{address.area}}</p>
+
+        <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
+          <ion-buttons>
+            <ion-button size="default" fill="clear">Edit</ion-button>
+            <ion-button size="default" fill="clear" (click)="deleteAddress(address.id)">Delete</ion-button>
+          </ion-buttons>
+        </div>
+      </div> 
+    </ion-item>
+
+  </div>
+
+  </ion-list>
+
+
+  <ng-template #noAddresses>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+      <p>You haven't added any address.</p>
+    </div>
+  </ng-template>
+
+
+  
 </ion-content>

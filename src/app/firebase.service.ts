@@ -1,10 +1,10 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import {onSnapshot,Firestore, collection, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, addDoc, CollectionReference, setDoc } from '@angular/fire/firestore'
+import {onSnapshot,Firestore, collection, doc, getDoc, getDocs, query, where, updateDoc, deleteDoc, addDoc, CollectionReference, setDoc, docData } from '@angular/fire/firestore'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, sendPasswordResetEmail, sendEmailVerification, User, onAuthStateChanged, user } from '@angular/fire/auth';
 import { AlertController } from '@ionic/angular';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, map, catchError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -204,6 +204,20 @@ export class FirebaseService implements OnInit  {
       return null;
     }
   }
+  getUserByUidObservable(uid: string): Observable<any> {
+    return new Observable((observer) => {
+      const unsubscribe = onSnapshot(doc(this.firestore, 'users', uid), (doc) => {
+        if (doc.exists()) {
+          observer.next(doc.data());
+        } else {
+          observer.next(null);
+        }
+      });
+  
+      // Return the unsubscribe function to be called when the Observable is unsubscribed
+      return unsubscribe;
+    });
+  }
 
   async getUserByEmail(email:string){
     const userCollection = collection(this.firestore, 'users');
@@ -239,3 +253,4 @@ export class FirebaseService implements OnInit  {
   
   
 }
+

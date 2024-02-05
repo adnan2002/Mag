@@ -91,7 +91,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-button expand="full" type="submit" color="primary">Submit</ion-button>
+    <ion-button expand="full" (click)="onSubmit()" [disabled]="!form.valid" type="submit" color="dark">Submit</ion-button>
   </form>
 
  
