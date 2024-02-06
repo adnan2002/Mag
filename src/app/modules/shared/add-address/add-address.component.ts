@@ -5,14 +5,15 @@ import Phone from 'Phone';
 
 
 import {Firestore, arrayUnion, updateDoc, doc} from '@angular/fire/firestore'
-import {getAuth, User} from '@angular/fire/auth'
+import {getAuth} from '@angular/fire/auth'
 
 @Component({
   selector: 'app-add-address',
-  templateUrl: './add-address.page.html',
-  styleUrls: ['./add-address.page.scss'],
+  templateUrl: './add-address.component.html',
+  styleUrls: ['./add-address.component.scss'],
 })
-export class AddAddressPage implements OnInit {
+export class AddAddressComponent  implements OnInit {
+
   form: FormGroup|any;
   isApartment: boolean = false;
 
@@ -80,9 +81,6 @@ export class AddAddressPage implements OnInit {
   }
   
 
-  dismiss(){
-    this.modalCtrl.dismiss();
-  }
 
   ngOnInit() {
     
@@ -164,6 +162,5 @@ toast.present();
 
 
 
-  }
 
-
+}

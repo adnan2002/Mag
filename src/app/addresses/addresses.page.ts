@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
-import { AddAddressPage } from '../add-address/add-address.page';
 import { ModalController } from '@ionic/angular';
 import { FirebaseService } from '../firebase.service';
+
+import { AddressModalPage } from '../address-modal/address-modal.page';
 
 import {getAuth} from '@angular/fire/auth'
 import {doc, getDoc, setDoc, deleteField, updateDoc, Firestore } from '@angular/fire/firestore'
@@ -32,9 +33,9 @@ export class AddressesPage implements OnInit {
 
   async displayAdd(){
     const address = await this.modal.create({
-      component: AddAddressPage,
+      component: AddressModalPage,
       backdropDismiss: true,
-      initialBreakpoint: 0.97
+      initialBreakpoint: 0.9
     });
 
     

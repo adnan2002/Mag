@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AddAddressPage } from './add-address.page';
+import { AddressModalPage } from './address-modal.page';
 
-describe('AddAddressPage', () => {
-  let component: AddAddressPage;
-  let fixture: ComponentFixture<AddAddressPage>;
+describe('AddressModalPage', () => {
+  let component: AddressModalPage;
+  let fixture: ComponentFixture<AddressModalPage>;
 
   beforeEach(async(() => {
-    fixture = TestBed.createComponent(AddAddressPage);
+    fixture = TestBed.createComponent(AddressModalPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

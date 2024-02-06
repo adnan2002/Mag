@@ -4,11 +4,15 @@ import { SignupComponent } from './signup/signup.component';
 import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SigninComponent } from './signin/signin.component';
+import { AddAddressComponent } from './add-address/add-address.component';
+import { EditAddressComponent } from './edit-address/edit-address.component';
 
 @NgModule({
   declarations: [
     SignupComponent,
-    SigninComponent
+    SigninComponent,
+    AddAddressComponent,
+    EditAddressComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +22,9 @@ import { SigninComponent } from './signin/signin.component';
   ],
   exports: [
     SignupComponent,
-    SigninComponent
+    SigninComponent,
+    AddAddressComponent,
+    EditAddressComponent
   ]
 })
 export class SharedModule { }

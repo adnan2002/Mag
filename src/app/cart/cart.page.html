@@ -38,7 +38,7 @@
           </div>
         </div>
         </div>
-        <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
+        <div style="width: auto; display: flex; justify-content: flex-end; align-items: center;">
           <ion-button color="dark" fill="clear" (click)="minus(product.id, product.variant)" size="default"><ion-icon  name="remove-outline"></ion-icon></ion-button>
           <ion-text style="margin-left: 5px; margin-right: 5px">{{product.quantity}}</ion-text>
           <ion-button color="dark" (click)="add(product.id, product.variant)" fill="clear" [disabled]="product.disabled" size="default"><ion-icon name="add-outline"></ion-icon></ion-button>
