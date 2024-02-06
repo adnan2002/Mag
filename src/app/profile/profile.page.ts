@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../firebase.service';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
+import {Browser} from '@capacitor/browser'
 
 @Component({
   selector: 'app-profile',
@@ -90,6 +91,14 @@ export class ProfilePage implements OnInit {
 
   goToAddress(){
     this.nav.navigateForward('tabs/profile/addresses')
+  }
+
+  async gotoInstagram(){
+    await Browser.open({url: 'https://www.instagram.com/imagnolia_/'})
+  }
+
+  async gotoTikTok(){
+    await Browser.open({url: 'https://www.tiktok.com/@imagnolia'});
   }
 
 
