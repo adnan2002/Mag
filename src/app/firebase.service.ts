@@ -245,6 +245,31 @@ export class FirebaseService implements OnInit  {
     return this.authState.asObservable();
   }
 
+  async getAddressById(id:string) {
+    try {
+      const auth = getAuth();
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        const docRef = doc(this.firestore, "users", uid);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const userAddresses = docSnap.data()['addresses'];
+          const address = userAddresses.find((address:any) => address.id === id);
+          return Promise.resolve(address);
+        } else {
+         return null;
+        }
+      } else {
+        console.log("User is not authenticated!");
+      }
+    } catch (error) {
+      console.error("Error getting document:", error);
+      return null;
+    }
+}
+
+
 
   
 

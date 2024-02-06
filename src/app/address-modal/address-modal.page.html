@@ -8,9 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
 
-  <app-add-address></app-add-address>
+
+  <app-add-address *ngIf="!addressId"></app-add-address>
+  <app-edit-address *ngIf="addressId" [id]="addressId"></app-edit-address>
 
 
 </ion-content>

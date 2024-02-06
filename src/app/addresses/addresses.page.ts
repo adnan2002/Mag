@@ -96,6 +96,21 @@ export class AddressesPage implements OnInit {
   
     await alert.present();
   }
+
+
+  async editAddress(id:string){
+    const address = await this.modal.create({
+      component: AddressModalPage,
+      componentProps: {addressId: id},
+      backdropDismiss: true,
+      initialBreakpoint: 0.9
+    });
+
+
+    address.present();
+
+
+  }
   
 
 }

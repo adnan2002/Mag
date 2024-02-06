@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-address-modal',
@@ -8,7 +8,11 @@ import { ModalController } from '@ionic/angular';
 })
 export class AddressModalPage implements OnInit {
 
-  constructor(private modalCtrl:ModalController) { }
+  addressId:any;
+
+  constructor(private modalCtrl:ModalController, private navParams:NavParams) {
+    this.addressId = this.navParams.get('addressId');
+   }
 
   ngOnInit() {
   }
@@ -16,5 +20,7 @@ export class AddressModalPage implements OnInit {
   dismiss(){
     this.modalCtrl.dismiss();
   }
+
+
 
 }
