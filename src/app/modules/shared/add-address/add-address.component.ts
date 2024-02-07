@@ -121,7 +121,8 @@ export class AddAddressComponent  implements OnInit {
       road: this.form.get('road').value,
       block: this.form.get('block').value,
       area: this.form.get('area').value,
-      addressType: this.form.get('addressType').value
+      addressType: this.form.get('addressType').value,
+      countryCode: this.form.get('countryCode').value
     }
 
     if(this.form.get('additionalDirections').value){

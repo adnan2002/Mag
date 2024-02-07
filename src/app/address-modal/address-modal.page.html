@@ -3,7 +3,7 @@
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()" color="dark" size="large"><ion-icon size="large" name="close-circle"></ion-icon></ion-button>
     </ion-buttons>
-    <ion-title>Add Address</ion-title>
+    <ion-title>{{addressId ? 'Edit Address' : 'Add Address' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
