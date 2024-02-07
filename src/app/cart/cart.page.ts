@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { FirebaseService } from '../firebase.service';
 import { BehaviorSubject } from 'rxjs';
@@ -17,7 +17,7 @@ export class CartPage implements OnInit {
   productsArr:any;
   disabled = false;
   delivery:any;
-  constructor(private cdr:ChangeDetectorRef,private cartService:CartService, private firebase:FirebaseService, private storage:Storage) {
+  constructor(private nav:NavController,private cdr:ChangeDetectorRef,private cartService:CartService, private firebase:FirebaseService, private storage:Storage) {
     this.getDelivery();
    }
 
@@ -63,10 +63,10 @@ getTotalPrice(): Observable<any> {
       this.productsArr = products;
     })
 
-    
+  }
 
-
-  
+  goToCheckout(){
+    this.nav.navigateForward('/checkout');
   }
 
 

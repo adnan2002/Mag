@@ -50,7 +50,11 @@ const routes: Routes = [
   {
     path: 'address-modal',
     loadChildren: () => import('./address-modal/address-modal.module').then( m => m.AddressModalPageModule)
+  },  {
+    path: 'checkout',
+    loadChildren: () => import('./checkout/checkout.module').then( m => m.CheckoutPageModule)
   }
+
 
 
 

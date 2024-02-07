@@ -59,7 +59,7 @@
       <span style="font-size: 16px; color: rgb(100, 100, 100); margin-right: 10px">Total</span> <span style="font-weight: 300">BHD</span> {{totalPrice?.total.toFixed(2)}}
     </ion-text>
   </ion-toolbar>
-  <ion-button expand="block" color="dark" [disabled]="!(productsArr.length > 0)" >Checkout</ion-button>
+  <ion-button expand="block" color="dark" [disabled]="!(productsArr.length > 0)" (click)="goToCheckout()">Checkout</ion-button>
 </ion-footer>
 
 
