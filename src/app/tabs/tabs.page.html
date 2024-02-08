@@ -1,17 +1,17 @@
 <ion-tabs (ionTabsDidChange)="setCurrentTab()" #myTabs>
   <ion-tab-bar slot="bottom" >
     <ion-tab-button tab="home" >
-      <ion-icon [name]="selectedTab === 'home' ? 'home' : 'home-outline'"></ion-icon>
+      <ion-icon [name]="selectedTab === 'home' ? 'home-sharp' : 'home-outline'"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="search">
-      <ion-icon [name]="selectedTab === 'search' ? 'search' : 'search-outline'"></ion-icon>
+      <ion-icon [name]="selectedTab === 'search' ? 'search-sharp' : 'search-outline'"></ion-icon>
       <ion-label>Search</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="cart">
-      <ion-icon [name]="selectedTab === 'cart' ? 'bag-handle' : 'bag-handle-outline'"></ion-icon>
+      <ion-icon [name]="selectedTab === 'cart' ? 'bag-handle-sharp' : 'bag-handle-outline'"></ion-icon>
       <ion-label>Bag</ion-label>
       <ion-badge style="background-color: #C99B9B;" *ngIf="cartItemCount | async as count; else noCount " color="danger">{{count}}</ion-badge>
       <ng-template #noCount></ng-template>
@@ -19,7 +19,7 @@
     </ion-tab-button>
     
     <ion-tab-button tab="profile">
-      <ion-icon [name]="selectedTab === 'profile' ? 'person' : 'person-outline'"></ion-icon>
+      <ion-icon [name]="selectedTab === 'profile' ? 'person-sharp' : 'person-outline'"></ion-icon>
       <ion-label>Account</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
