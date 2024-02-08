@@ -270,6 +270,28 @@ export class FirebaseService implements OnInit  {
 }
 
 
+getUserAddresses(): Observable<any> {
+  const auth:any = getAuth();
+  const uid = auth.currentUser.uid;
+  const userRef = doc(this.firestore, 'users', uid);
+
+  return new Observable(observer => {
+    onSnapshot(userRef, docSnapshot => {
+      if (docSnapshot.exists()) {
+        const userData = docSnapshot.data();
+        const addresses = userData ? userData['addresses'] : [];
+        observer.next(addresses);
+      } else {
+        observer.error('No such user!');
+      }
+    }, error => {
+      observer.error(error);
+    });
+  });
+}
+
+
+
 
   
 

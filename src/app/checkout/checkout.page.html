@@ -17,7 +17,8 @@
     <div style="height: 50%; width: 90%; display: flex; flex-direction: column; gap: 10px">
       <div style="  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 20px; position: relative;">
 
-        <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="!guestAddress"> <!-- When there is no address -->
+        <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="(!guestAddress && !isAuthenticated) || (isAuthenticated && (!userAddresses || userAddresses.length === 0))"
+        > <!-- When there is no address -->
         <ion-text color="dark" style="font-weight: bold; font-size: 25px;">Shipping</ion-text>
         <div style="display: flex; align-items: center;  justify-content: space-between; ">
        <div style="display: flex; align-items: center;">
@@ -26,14 +27,15 @@
        </div>
         <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin-right: 10px;">
           <ion-button color="dark" (click)="add()">Add</ion-button>
-
         </div>
-        
       </div>
+    </div>
 
+    <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="userAddresses && userAddresses.length > 0">
       
 
     </div>
+
 
     <div *ngIf="guestAddress" style="margin: 15px; display: flex; flex-direction: column; gap: 5px" (click)="openEditGuest()"> <!--When there is an address, but only for a guest-->
       <ion-text color="dark" style="font-weight: bold; font-size: 25px; margin-bottom: 10px;">Shipping</ion-text>
@@ -55,6 +57,7 @@
 
   </div>
   </div>
+
 
 
   
