@@ -52,9 +52,13 @@ const routes: Routes = [
     loadChildren: () => import('./address-modal/address-modal.module').then( m => m.AddressModalPageModule)
   },
   {
-    path: 'checkout/:total',
+    path: 'checkout',
     loadChildren: () => import('./checkout/checkout.module').then( m => m.CheckoutPageModule)
+  },  {
+    path: 'edit-address-guest',
+    loadChildren: () => import('./edit-address-guest/edit-address-guest.module').then( m => m.EditAddressGuestPageModule)
   }
+
 
 
 

@@ -12,6 +12,18 @@
         </ion-segment>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="!isAuth">
+      <ion-col>
+        <ion-item>
+          <ion-input  label="First Name" labelPlacement="floating" type="text" formControlName="firstName"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input  label="Last Name" labelPlacement="floating" type="text" formControlName="lastName"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="!isApartment">
       <ion-col>
         <ion-item>

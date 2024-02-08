@@ -15,9 +15,9 @@
 
   <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;">
     <div style="height: 50%; width: 90%; display: flex; flex-direction: column; gap: 10px">
-      <div style="height: 100px;  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 20px; position: relative;">
+      <div style="  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 20px; position: relative;">
 
-        <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px">
+        <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="!guestAddress"> <!-- When there is no address -->
         <ion-text color="dark" style="font-weight: bold; font-size: 25px;">Shipping</ion-text>
         <div style="display: flex; align-items: center;  justify-content: space-between; ">
        <div style="display: flex; align-items: center;">
@@ -25,7 +25,7 @@
         <ion-text color="medium"> Add Shipping Address</ion-text>
        </div>
         <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); margin-right: 10px;">
-          <ion-button color="dark">Add</ion-button>
+          <ion-button color="dark" (click)="add()">Add</ion-button>
 
         </div>
         
@@ -35,9 +35,21 @@
 
     </div>
 
+    <div *ngIf="guestAddress" style="margin: 15px; display: flex; flex-direction: column; gap: 5px" (click)="openEditGuest()"> <!--When there is an address, but only for a guest-->
+      <ion-text color="dark" style="font-weight: bold; font-size: 25px; margin-bottom: 10px;">Shipping</ion-text>
+      <ion-text>{{ capitalizeFirstLetter(guestAddress.firstName) + ' ' + capitalizeFirstLetter(guestAddress.lastName)}}</ion-text>
+      <ion-text *ngIf="guestAddress.addressType === 'home'">House: {{guestAddress?.house}}</ion-text>
+      <ion-text *ngIf="guestAddress.addressType === 'apartment'">Building: {{guestAddress?.buildingName}}</ion-text>
+      <ion-text>Road: {{guestAddress.road}}</ion-text>
+      <ion-text>Block: {{guestAddress.block}}</ion-text>
+      <ion-text>Area: {{guestAddress.area}}</ion-text>
+
+    </div>
+
+    <ion-icon *ngIf="guestAddress" name="chevron-forward-outline" color="dark" size="large" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);"></ion-icon>
 
       </div>
-      <div style="height: 300px;  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px;">
+      <div  style="height: 300px;  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px;">
       
     </div>
 

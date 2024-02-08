@@ -1,0 +1,113 @@
+<ion-header [translucent]="false">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="dark" size="large"><ion-icon size="large" name="close-circle"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title>Edit Address</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">edit-address-guest</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-segment formControlName="addressType">
+            <ion-segment-button value="home">
+              <ion-label>Home</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="apartment">
+              <ion-label>Apartment</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+      <ion-row >
+        <ion-col>
+          <ion-item>
+            <ion-input  label="First Name" labelPlacement="floating" type="text" formControlName="firstName"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input  label="Last Name" labelPlacement="floating" type="text" formControlName="lastName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!isApartment">
+        <ion-col>
+          <ion-item>
+            <ion-input label="House" labelPlacement="floating" type="text" formControlName="house"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="isApartment">
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Building Name" labelPlacement="floating" formControlName="buildingName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="isApartment">
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Apartment Number" labelPlacement="floating" formControlName="apartmentNumber"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Floor" labelPlacement="floating" formControlName="floor"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Road" labelPlacement="floating" formControlName="road"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Block" labelPlacement="floating" formControlName="block"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <span class="fi fi-bh" style="margin-right: 10px" *ngIf="form.get('countryCode').value === '+973'"></span>
+            <span class="fi fi-sa" style="margin-right: 10px" *ngIf="form.get('countryCode').value === '+966'"></span>
+            <ion-select formControlName="countryCode" style="margin-right: 10px;" placeholder="Select Your Country" >
+              <ion-select-option value="+973">+973</ion-select-option>
+              <ion-select-option value="+966">+966</ion-select-option>
+            </ion-select>
+            
+            <ion-input type="tel" label="Phone Number" labelPlacement="floating" formControlName="phoneNumber"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" label="Area" labelPlacement="floating" formControlName="area"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-textarea formControlName="additionalDirections" label="Additional Directions (Optional)" labelPlacement="floating"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button expand="full" (click)="onSubmit()" [disabled]="!form.valid" type="submit" color="dark">Submit</ion-button>
+  </form>
+</ion-content>

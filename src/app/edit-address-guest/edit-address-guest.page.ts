@@ -1,41 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController, ToastController } from '@ionic/angular';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import Phone from 'Phone';
-
-// import {Preferences} from '@capacitor/preferences'
-import { CapStorageService } from 'src/app/cap-storage.service';
-
-
-import {Firestore, arrayUnion, updateDoc, doc} from '@angular/fire/firestore'
-import {getAuth} from '@angular/fire/auth'
+import { CapStorageService } from '../cap-storage.service';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
-  selector: 'app-add-address',
-  templateUrl: './add-address.component.html',
-  styleUrls: ['./add-address.component.scss'],
+  selector: 'app-edit-address-guest',
+  templateUrl: './edit-address-guest.page.html',
+  styleUrls: ['./edit-address-guest.page.scss'],
 })
-export class AddAddressComponent  implements OnInit {
+export class EditAddressGuestPage implements OnInit {
 
   form: FormGroup|any;
   isApartment: boolean = false;
-  isAuth= true;
+  address:any;
 
-  constructor(private cap:CapStorageService,private loadingController:LoadingController,private firestore:Firestore,private modalCtrl:ModalController,private fb: FormBuilder, private toasty:ToastController) { 
-    let firstNameValidators:any, lastNameValidators:any;
-
-
-    if(getAuth().currentUser){
-      this.isAuth = true;
-      firstNameValidators = [];
-      lastNameValidators = []
-    }else{
-      this.isAuth = false;
-      firstNameValidators = [Validators.required];
-      lastNameValidators = [Validators.required];
-    }
-
-
+  constructor(private toasty:ToastController,private loadingController:LoadingController,private cap:CapStorageService,private modalCtrl:ModalController, private fb:FormBuilder) {
     this.form = this.fb.group({
       addressType: ['home'],
       house: [''],
@@ -48,17 +29,21 @@ export class AddAddressComponent  implements OnInit {
       apartmentNumber: [''],
       floor: [''],
       countryCode: ['+973'],
-      firstName: ['', firstNameValidators],
-      lastName: ['', lastNameValidators]
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required]
     },{ validators:  this.addressValidator   });
 
     this.form.get('addressType').valueChanges.subscribe((value:any) => {
       this.isApartment = value === 'apartment';
     });
 
-  
-    
+   }
+
+  dismiss(){
+    this.modalCtrl.dismiss();
+
   }
+
   phoneNumberValidator(control: AbstractControl | any): {[key: string]: any} | null {
     const countryCode = control.get('countryCode').value;
     let phoneNumber = control.get('phoneNumber').value;
@@ -101,13 +86,7 @@ export class AddAddressComponent  implements OnInit {
     
     return null;
   }
-  
 
-
-  ngOnInit() {
-    
-    
-  }
 
   async onSubmit(){
     const phoneValidationResult = this.phoneNumberValidator(this.form);
@@ -121,12 +100,12 @@ export class AddAddressComponent  implements OnInit {
   
       return toast.present();
     }
-
+  
     const loader = await this.loadingController.create({
       spinner: 'dots'
     });
     loader.present();
-
+  
     try{
     let phony = this.form.get('phoneNumber').value;
     if(this.form.get('countryCode').value === '+973'){
@@ -134,68 +113,92 @@ export class AddAddressComponent  implements OnInit {
     }else{
       phony = '+966'+phony;
     }
-
+  
     phony = phony.replace(/\s/g, '');
-
+  
     const data:any = {
-      id: new Date().getTime().toString(),
-      dateCreated: new Date(),
       phoneNumber: phony,
       road: this.form.get('road').value,
       block: this.form.get('block').value,
       area: this.form.get('area').value,
       addressType: this.form.get('addressType').value,
-      countryCode: this.form.get('countryCode').value
+      countryCode: this.form.get('countryCode').value,
+      firstName: this.form.get('firstName').value,
+      lastName: this.form.get('lastName').value
     }
-
+  
     if(this.form.get('additionalDirections').value){
       data.additionalDirections = this.form.get('additionalDirections').value;
+    }else{
+      delete this.address.additionalDirections;
     }
-
+  
     if(this.form.get('addressType').value === 'home'){
       data.house = this.form.get('house').value;
+      delete this.address.apartmentNumber;
+      delete this.address.buildingName;
+      delete this.address.floor;
     }else{
       data.apartmentNumber = this.form.get('apartmentNumber').value;
       data.buildingName = this.form.get('buildingName').value;
       data.floor = this.form.get('floor').value;
+      delete this.address.house;
     }
+  
+    
 
-    const user = getAuth();
-     // Get the current user's UID
-  const uid = user.currentUser?.uid;
+      
+        // Update the address
+        const result = { ...this.address, ...data };
 
-  // Add the address to the 'addresses' field in the user's document
-  const userDoc = uid ? doc(this.firestore, 'users', uid) : null;
-  if(userDoc && user.currentUser){
-  await updateDoc(userDoc, {
-    addresses: arrayUnion(data)
-  });
-  }
-  if(!user.currentUser){
-    data.firstName = this.form.get('firstName').value;
-    data.lastName = this.form.get('lastName').value;
+        await this.cap.setItem('address',result);
 
-    this.cap.setItem('address',data);
-    // await Preferences.set({
-    //   key: 'address',
-    //   value: JSON.stringify(data)
-    // })
 
-  }
+        await loader.dismiss();
+        this.modalCtrl.dismiss();
+
+
+      }
+  
+      // Write the updated addresses array back to Firestore
+    
+
+
+  
+  
+catch(err){
   await loader.dismiss();
-  await this.modalCtrl.dismiss();
+  const toast = await this.toasty.create({message: 'Error Editing address.', color: 'danger', duration: 1000})
+  toast.present();
+  }
+  
 
-}catch(err){
-  await loader.dismiss();
- const toast = await this.toasty.create({message: 'Error adding address.', color: 'danger', duration: 1000})
-toast.present();
-}
+  
+  }
 
+ async ngOnInit() {
+  const ret:any = await Preferences.get({key: 'address'});
+  this.address = JSON.parse(ret.value);
+  this.form.controls['addressType'].setValue(this.address.addressType);
+    this.form.controls['road'].setValue(this.address.road);
+    this.form.controls['area'].setValue(this.address.area);
+    this.form.controls['block'].setValue(this.address.block);
+    if(this.address.additionalDirections){
+      this.form.controls['additionalDirections'].setValue(this.address.additionalDirections)
+    }
+    if(this.address.addressType === 'home'){
+      this.form.controls['house'].setValue(this.address.house);
+    }else if(this.address.addressType === 'apartment'){
+      this.form.controls['apartmentNumber'].setValue(this.address.apartmentNumber);
+      this.form.controls['buildingName'].setValue(this.address.buildingName);
+      this.form.controls['floor'].setValue(this.address.floor);
+    }
+    this.form.controls['countryCode'].setValue(this.address.countryCode);
+    this.form.controls['phoneNumber'].setValue(this.address.phoneNumber.replace(this.address.countryCode, ''));
+    this.form.controls['firstName'].setValue(this.address.firstName);
+    this.form.controls['lastName'].setValue(this.address.lastName);
 
 
   }
-
-
-
 
 }

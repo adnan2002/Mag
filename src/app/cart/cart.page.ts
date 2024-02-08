@@ -66,8 +66,8 @@ getTotalPrice(): Observable<any> {
   }
 
   async goToCheckout(){
-    const total = this.productsArr.reduce((acc: number, product: any) => acc + (product.quantity * product.new_price), 0);
-    this.nav.navigateForward(`checkout/${total}`)
+    // const total = this.productsArr.reduce((acc: number, product: any) => acc + (product.quantity * product.new_price), 0);
+    this.nav.navigateForward(`checkout`)
   }
 
 

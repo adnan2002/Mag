@@ -174,6 +174,10 @@ async onSubmit(){
       } else {
         delete addresses[index].house;
       }
+
+      if(!data.additionalDirections){
+        delete addresses[index].additionalDirections;
+      }
       // Update the address
       addresses[index] = { ...addresses[index], ...data };
     }
