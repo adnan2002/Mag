@@ -1,0 +1,42 @@
+<ion-header [translucent]="false">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="dark" size="large"><ion-icon size="large" name="close-circle"></ion-icon></ion-button>
+    </ion-buttons>
+    <ion-title>Select Address</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+    <ion-item *ngFor="let address of addresses">
+      <ion-checkbox slot="start" [checked]="address.id === selectedAddressId" (ionChange)="selectAddress(address.id)"></ion-checkbox>
+
+
+      <div style="width: 100%;" *ngIf="address.addressType === 'home'">
+        <p><strong>House:</strong> {{address.house}}</p>
+        <p><strong>Road:</strong> {{address.road}}</p>
+        <p><strong>Block:</strong> {{address.block}}</p>
+        <p><strong>Area:</strong> {{address.area}}</p>
+        <p><strong>Phone Number:</strong> {{address.phoneNumber}}</p>
+
+
+
+      </div> 
+      <div style="width: 100%;" *ngIf="address.addressType === 'apartment'">
+        <p><strong>Apartment Number:</strong> {{address.apartmentNumber}}</p>
+        <p><strong>Building Name:</strong> {{address.buildingName}}</p>
+        <p><strong>Floor:</strong> {{address.floor}}</p>
+        
+        <p><strong>Road:</strong> {{address.road}}</p>
+        <p><strong>Block:</strong> {{address.block}}</p>
+        <p><strong>Area:</strong> {{address.area}}</p>
+        <p><strong>Phone Number:</strong> {{address.phoneNumber}}</p>
+
+
+      </div> 
+    </ion-item>
+
+  
+
+</ion-content>

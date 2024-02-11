@@ -7,6 +7,7 @@ import { CapStorageService } from '../cap-storage.service';
 import { EditAddressGuestPage } from '../edit-address-guest/edit-address-guest.page';
 import { FirebaseService } from '../firebase.service';
 import { getAuth } from '@angular/fire/auth';
+import { SelectAddressPage } from '../select-address/select-address.page';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.page.html',
@@ -15,8 +16,10 @@ import { getAuth } from '@angular/fire/auth';
 export class CheckoutPage implements OnInit {
   userAddresses$:any;
   userAddresses = [];
+  selectedAddress:any;
   guestAddress:any;
   isAuthenticated = false;
+  userObject:any;
 
   constructor(private cap:CapStorageService,private nav:NavController, private modalCtr:ModalController, private firebase:FirebaseService) { }
 
@@ -24,10 +27,16 @@ export class CheckoutPage implements OnInit {
     const auth = getAuth();
     if(auth.currentUser){
       this.isAuthenticated = true;
+      this.userObject = await this.firebase.getUserByUid(auth.currentUser.uid);
+      
     
     this.userAddresses$ = this.firebase.getUserAddresses();
     this.userAddresses$.subscribe((data:any)=>{
+      if(data){
       this.userAddresses = data;
+      this.selectedAddress = data?.sort((a:any, b:any) => b.dateCreated.toDate() - a.dateCreated.toDate())[0];
+      }
+
     });
   }else{
     this.isAuthenticated = false;
@@ -67,6 +76,25 @@ export class CheckoutPage implements OnInit {
     });
     modal.present();
 
+  }
+
+
+  async presentSelectAddressModal() {
+    const modal = await this.modalCtr.create({
+      component: SelectAddressPage,
+      componentProps: { 'selectedAddressId': this.selectedAddress.id },
+      initialBreakpoint: 0.9
+    });
+  
+    modal.onDidDismiss().then(async (dataReturned) => {
+      if (dataReturned.data) {
+        const selectedAddressId = dataReturned.data.selectedAddressId;
+        this.selectedAddress = await this.firebase.getAddressById(selectedAddressId);
+        // Now you can use this.selectedAddressId to get the selected address
+      }
+    });
+  
+    return await modal.present();
   }
   
 }

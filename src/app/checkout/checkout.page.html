@@ -31,13 +31,19 @@
       </div>
     </div>
 
-    <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="userAddresses && userAddresses.length > 0">
-      
+    <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="userAddresses && userAddresses.length > 0 && selectedAddress && userObject" (click)="presentSelectAddressModal()"> <!--Auth user with address-->
+      <ion-text color="dark" style="font-weight: bold; font-size: 25px; margin-bottom: 10px;">Shipping</ion-text>
+      <ion-text>{{ capitalizeFirstLetter(userObject.firstName) + ' '+ capitalizeFirstLetter(userObject.lastName)}}</ion-text>
+      <ion-text *ngIf="selectedAddress.addressType === 'home'">House: {{selectedAddress?.house}}</ion-text>
+      <ion-text *ngIf="selectedAddress.addressType === 'apartment'">Building: {{selectedAddress?.buildingName}}</ion-text>
+      <ion-text>Road: {{selectedAddress.road}}</ion-text>
+      <ion-text>Block: {{selectedAddress.block}}</ion-text>
+      <ion-text>Area: {{selectedAddress.area}}</ion-text>
 
     </div>
 
 
-    <div *ngIf="guestAddress" style="margin: 15px; display: flex; flex-direction: column; gap: 5px" (click)="openEditGuest()"> <!--When there is an address, but only for a guest-->
+    <div *ngIf="guestAddress && !userObject" style="margin: 15px; display: flex; flex-direction: column; gap: 5px" (click)="openEditGuest()"> <!--When there is an address, but only for a guest-->
       <ion-text color="dark" style="font-weight: bold; font-size: 25px; margin-bottom: 10px;">Shipping</ion-text>
       <ion-text>{{ capitalizeFirstLetter(guestAddress.firstName) + ' ' + capitalizeFirstLetter(guestAddress.lastName)}}</ion-text>
       <ion-text *ngIf="guestAddress.addressType === 'home'">House: {{guestAddress?.house}}</ion-text>
@@ -48,7 +54,7 @@
 
     </div>
 
-    <ion-icon *ngIf="guestAddress" name="chevron-forward-outline" color="dark" size="large" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);"></ion-icon>
+    <ion-icon *ngIf="guestAddress || (userAddresses && userAddresses.length > 0)" name="chevron-forward-outline" color="dark" size="large" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);"></ion-icon>
 
       </div>
       <div  style="height: 300px;  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px;">

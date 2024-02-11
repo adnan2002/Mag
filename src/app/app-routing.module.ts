@@ -57,6 +57,10 @@ const routes: Routes = [
   },  {
     path: 'edit-address-guest',
     loadChildren: () => import('./edit-address-guest/edit-address-guest.module').then( m => m.EditAddressGuestPageModule)
+  },
+  {
+    path: 'select-address',
+    loadChildren: () => import('./select-address/select-address.module').then( m => m.SelectAddressPageModule)
   }
 
 
