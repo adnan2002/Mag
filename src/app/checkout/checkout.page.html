@@ -57,9 +57,41 @@
     <ion-icon *ngIf="guestAddress || (userAddresses && userAddresses.length > 0)" name="chevron-forward-outline" color="dark" size="large" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);"></ion-icon>
 
       </div>
-      <div  style="height: 300px;  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px;">
+      <div style="background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px;">
+        <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px">
+          <ion-text color="dark" style="font-weight: bold; font-size: 25px; margin-bottom: 10px;">Order Summary</ion-text>
+          <ion-grid>
+            <ng-container *ngFor="let product of products">
+              <ng-container *ngIf="isVariantProduct(product); else singleProduct">
+                <ng-container *ngFor="let item of product">
+                  <ion-row>
+                    <ion-col style="flex: 1 0 0;">
+                      {{item.quantity}} x {{item.title}} <br> <ion-text color="dark" style="font-weight: bold;">{{item.variantName}}</ion-text> 
+                    </ion-col>
+                    <ion-col style="flex: 0 0 auto;">
+                      BD {{getCorrectPrice(item).toFixed(2)}}
+                    </ion-col>
+                  </ion-row>
+                </ng-container>
+              </ng-container>
+              <ng-template #singleProduct>
+                <ion-row>
+                  <ion-col style="flex: 1 0 0;">
+                    {{product.quantity}} x {{product.title}}
+                  </ion-col>
+                  <ion-col style="flex: 0 0 auto;">
+                    BD {{product.new_price.toFixed(2)}}
+                  </ion-col>
+                </ion-row>
+              </ng-template>
+            </ng-container>
+          </ion-grid>
+          <ion-text>Delivery: {{total >= 20 ? 'Free' : delivery?.charge}}</ion-text>
+          <ion-text>total: {{total ? total.toFixed(3) : ''}}</ion-text>
+        </div>
+      </div>
       
-    </div>
+      
 
   </div>
   </div>

@@ -8,6 +8,7 @@ import { EditAddressGuestPage } from '../edit-address-guest/edit-address-guest.p
 import { FirebaseService } from '../firebase.service';
 import { getAuth } from '@angular/fire/auth';
 import { SelectAddressPage } from '../select-address/select-address.page';
+import { Storage } from '@ionic/storage-angular';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.page.html',
@@ -20,8 +21,11 @@ export class CheckoutPage implements OnInit {
   guestAddress:any;
   isAuthenticated = false;
   userObject:any;
+   products:any;
+   total:any;
+   delivery:any;
 
-  constructor(private cap:CapStorageService,private nav:NavController, private modalCtr:ModalController, private firebase:FirebaseService) { }
+  constructor(private storage:Storage,private cap:CapStorageService,private nav:NavController, private modalCtr:ModalController, private firebase:FirebaseService) { }
 
   async ngOnInit() {
     const auth = getAuth();
@@ -46,13 +50,73 @@ export class CheckoutPage implements OnInit {
     });
   }
 
+  const keys = await this.storage.keys();
+    const productPromises = keys.map(key => this.getProduct(key));
+    this.products = await Promise.all(productPromises);
+    this.delivery = await this.firebase.getDeliveryCharge();
+    this.total = await this.getTotalPrice();
+
+    
+
+
+
 
     
   }
 
 
+  async getProduct(id: string) {
+    const product = await this.firebase.getProductById(id);
+    const localData = await this.storage.get(id);
+
+    if (Array.isArray(localData)) {
+      return localData.map(variant => ({
+        ...product,
+        variantName: variant.variant,
+        quantity: variant.quantity
+      }));
+    }
+
+    return {
+      ...product,
+      quantity: localData
+    };
+  }
+
+  isVariantProduct(product: any): boolean {
+    return Array.isArray(product);
+  }
+
+
+  getCorrectPrice(item:any){
+    const variants = item.variants;
+    const filteredVariants = variants.filter((data:any) => data.name === item.variantName);
+    return filteredVariants[0].new_price;
+}
+
   goBack(){
     this.nav.navigateBack('/tabs/cart')
+  }
+
+
+ async getTotalPrice(){
+    let sum =0;
+    for(let i=0; i<this.products.length; i++){
+      if(Array.isArray(this.products[i])){
+        for(let product of this.products[i]){
+          const variants = product.variants;
+          const filteredVariants = variants.filter((data:any) => data.name === product.variantName);
+          sum = sum + (product.quantity * filteredVariants[0].new_price)
+        }
+      }else{
+        sum = sum + (this.products[i].quantity * this.products[i].new_price);
+      }
+    }
+    if(sum >= 20){
+      return sum;
+    }else{
+      return sum + this.delivery.charge;
+    }
   }
 
 
