@@ -160,5 +160,13 @@ export class CheckoutPage implements OnInit {
   
     return await modal.present();
   }
+
+
+
+  isDisabled(){
+
+    return (this.userAddresses && this.userAddresses.length > 0 && this.selectedAddress && this.userObject) || (this.guestAddress && !this.userObject)
+
+  }
   
 }

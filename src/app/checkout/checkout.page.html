@@ -14,7 +14,12 @@
  
 
   <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;">
-    <div style="height: 50%; width: 90%; display: flex; flex-direction: column; gap: 10px">
+    <div style=" width: 90%; display: flex; flex-direction: column; gap: 10px">
+      <div style="height: 50px; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px" *ngIf="!userObject">
+        <ion-text>Already have an account? <span routerLink="/tabs/profile" style=" color: #C99B9B; font-weight: bold; border-bottom: 2px solid #C99B9B;">Sign In</span></ion-text>
+        <ion-text>Or checkout as guest</ion-text>
+        
+      </div>
       <div style="  background: #fff; box-shadow: 0 4px 6px 0 rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 20px; position: relative;">
 
         <div style="margin: 15px; display: flex; flex-direction: column; gap: 5px" *ngIf="(!guestAddress && !isAuthenticated) || (isAuthenticated && (!userAddresses || userAddresses.length === 0))"
@@ -86,8 +91,10 @@
               </ng-template>
             </ng-container>
           </ion-grid>
-          <ion-text>Delivery: {{total >= 20 ? 'Free' : delivery?.charge}}</ion-text>
-          <ion-text>total: {{total ? total.toFixed(3) : ''}}</ion-text>
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 5px; justify-content: center; align-items: flex-end;">
+          <ion-text style="font-weight: 300; font-size: 20px;"><span style="font-size: 16px; color: rgb(100, 100, 100); margin-right: 10px">Delivery </span> BD {{total >= 20 ? 'Free' : delivery?.charge.toFixed(3)}}</ion-text>
+          <ion-text style="font-weight: 300; font-size: 20px;"><span style="font-size: 16px; color: rgb(100, 100, 100); margin-right: 10px">Total </span> BD {{total ? total.toFixed(3) : ''}}</ion-text>
+        </div>
         </div>
       </div>
       
@@ -95,8 +102,16 @@
 
   </div>
   </div>
+  <div style="height: 100px">
+
+  </div>
 
 
 
   
 </ion-content>
+
+<ion-footer style="background: white;">
+  <ion-button expand="full" color="dark" [disabled]="!isDisabled()">Continue to Payment</ion-button>
+
+</ion-footer>
